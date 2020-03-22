@@ -59,8 +59,6 @@
     animate();
 
 
-
-
     function init() {
         let canvas = document.getElementById("screen");
         rendererThree = new THREE.WebGLRenderer({
@@ -98,26 +96,26 @@
         camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
         rendererThree = new THREE.WebGLRenderer();
 
-        scene.background = new THREE.Color(0xefd1b5); //#85C1E9
-        scene.fog = new THREE.FogExp2(0xefd1b5, 0.05);
+        scene.background = new THREE.Color('pink'); //#85C1E9
+        scene.fog = new THREE.FogExp2('white', 0.05);
         scene.color = 0xFFFFFF;
 
         rendererThree.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(rendererThree.domElement);
 
         let shinyMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFF0000,
+            color: 0x85C1E9,
             roughness: 1,
             flatShading: true
         });
 
         let arenaSize = 50;
         let canyonWidth = 4;
-        let leftBound = arenaSize / 2 - canyonWidth;
-        let rightBound = arenaSize / 2 + canyonWidth;
+        let leftBound = -canyonWidth;
+        let rightBound = canyonWidth;
         for (let i = 0; i < 500; i++) {
             let cubeX = randomInt(arenaSize);
-            let cubeY = randomInt(arenaSize);
+            let cubeY = randomInt(arenaSize) - arenaSize / 2;
             if (cubeY > leftBound && cubeY < rightBound) continue;
             let geometry = new THREE.BoxGeometry(1, 1, randomInt(15) + 5);
             let cube = new THREE.Mesh(geometry, shinyMaterial);
@@ -133,7 +131,7 @@
         // plane.position.x += 1000 / 2;
         // plane.position.y += 1000 / 2;
         plane.position.z = 0;
-        scene.add(plane);
+        // scene.add(plane);
 
         // light
         let dirLight;
@@ -141,12 +139,12 @@
         dirLight.position.set(-2, 5, 3).normalize();
         scene.add(dirLight);
 
-        let light = new THREE.AmbientLight( 0xFFFFFF); // soft white light
-        scene.add( light );
+        let light = new THREE.AmbientLight(0xFFFFFF); // soft white light
+        scene.add(light);
 
         camera.position.z = 0;
         camera.position.x = 0;
-        camera.position.y = arenaSize / 2;
+        camera.position.y = 0;
         camera.rotation.x = 90 * Math.PI / 180;
         camera.rotation.y = -90 * Math.PI / 180;
         camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
@@ -156,6 +154,73 @@
     }
 
     function addTitleImage(scene) {
+        let loader = new THREE.TextureLoader();
+        let texture = loader.load('images/girls/Bo Derek.jpg');
+        texture.minFilter = THREE.LinearFilter;
+
+        let sideColor = 0x85C1E9;
+        var cubeMaterial = [
+            new THREE.MeshBasicMaterial({
+                map: texture, //left
+                fog: true,
+            }),
+            new THREE.MeshBasicMaterial({
+                map: texture, //right
+                fog: true,
+            }),
+            new THREE.MeshBasicMaterial({
+                color: sideColor, // top
+                fog: true,
+            }),
+            new THREE.MeshBasicMaterial({
+                color: sideColor, // bottom
+                fog: true,
+            }),
+            new THREE.MeshBasicMaterial({
+                color: sideColor, // front
+                fog: true,
+            }),
+            new THREE.MeshBasicMaterial({
+                color: sideColor, //back
+                fog: true,
+            })
+        ];
+
+
+        // preserve ratio
+        let scale = 2;
+        let geometry = new THREE.BoxBufferGeometry(.1, scale, scale * 375 / 500);
+        // let geometry = new THREE.PlaneGeometry(scale * 375 / 500, scale);
+        for (let i = 0; i < 1000; i++) {
+            let rotationAmount = 2 * Math.PI / 15 * i;
+
+
+            //Make a pivot
+            let pivot = new THREE.Group();
+
+
+            // make object
+            let mesh = new THREE.Mesh(geometry, cubeMaterial);
+            mesh.position.set(i/10 + 10, 0, 5);
+            mesh.rotation.x = Math.PI / 2;
+
+
+
+//Add object to pivot
+            pivot.add(mesh);
+            // pivot.position.set(new THREE.Vector3(0,0,0));
+
+//rotate the object around pivot
+            pivot.rotation.x = rotationAmount;
+
+            // mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), rotationAmount);
+            scene.add(pivot);
+        }
+        let mesh = new THREE.Mesh(geometry, cubeMaterial);
+        return mesh;
+    }
+
+    function addTitleImageB(scene) {
         let loader = new THREE.TextureLoader();
         let texture = loader.load('images/girls/Bo Derek.jpg');
         texture.minFilter = THREE.LinearFilter;
@@ -169,31 +234,30 @@
         // preserve ratio
         let scale = 2;
         let geometry = new THREE.PlaneGeometry(scale * 375 / 500, scale);
-        let mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(10, 24, 1);
-        mesh.rotation.y = -Math.PI / 2;
-        mesh.rotation.x = Math.PI / 2;
-        mesh.receiveShadow = false;
-        mesh.castShadow = false;
-        scene.add(mesh);
+            let mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(10, 0, 1);
+            mesh.rotation.y = -Math.PI / 2;
+            mesh.rotation.x = Math.PI / 2;
+            mesh.receiveShadow = false;
+            mesh.castShadow = false;
+            scene.add(mesh);
         return mesh;
     }
-
 
 
     function render3d() {
         // game.render(fpsAdjustment);
         let now = Date.now();
-        camera.position.x += Math.sin(now / 100) * 0.01 + .025;
+        camera.position.x += Math.sin(now / 100) * 0.02 + .025;
         camera.position.z = Math.sin(now / 100) * 0.01 + 0.2;
 
         if (turningLeft) {
             // camera.rotation.y += 2 * Math.PI / 180;
-            camera.rotateOnWorldAxis(new THREE.Vector3(0,0,1), 2 * Math.PI / 180);
+            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), 2 * Math.PI / 180);
         }
         if (turningRight) {
             // camera.rotation.y += -2 * Math.PI / 180;
-            camera.rotateOnWorldAxis(new THREE.Vector3(0,0,1), -2 * Math.PI / 180);
+            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -2 * Math.PI / 180);
         }
 
         // bo.rotateOnWorldAxis(new THREE.Vector3(0,0,1), -2 * Math.PI / 180);
@@ -204,7 +268,6 @@
     function render2d() {
         // activeScreen.render();
     }
-
 
 
     function startAudio() {
