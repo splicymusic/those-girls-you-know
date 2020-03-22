@@ -33,16 +33,28 @@
 <script type="module">
 
     import * as THREE from "./lib/three/build/three.module.js";
+    import Clock from "./js/Clock.js";
 
     // stats
     let stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild(stats.dom);
 
+    //2D
+    // try: https://stackoverflow.com/questions/19002850/custom-font-in-pixi-js
+    // const loader = new PIXI.loaders.Loader();
+    // loader.add('alba', 'fonts/ALBAS___.TTF');
+
     // audio
-    // let those_girls_you_know = new Audio('music/those-girls-you-know.mp3');
-    // if (those_girls_you_know) those_girls_you_know.loop = false;
+    let those_girls_you_know = new Audio('music/Those Girls You Know_5.mp3');
+    if (those_girls_you_know) those_girls_you_know.loop = false;
+    let isPlaying = false;
+
+
     // let audioContext = null;
+
+    let clock;
+
 
     // Renderers
     let rendererThree;
@@ -50,13 +62,11 @@
 
     // 3d objects
     let scene, camera;
-    let bo;
 
     let turningLeft = false;
     let turningRight = false;
 
     init();
-    animate();
 
 
     function init() {
@@ -73,11 +83,18 @@
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
+
+        // starting our clock, defining start position in animation
+        clock = new Clock(0, 0, 0);
     }
 
 
     function animate() {
         stats.begin();
+
+        // keep track of where we are in the song
+        clock.update();
+
         rendererThree.state.reset();
         render3d();
         rendererThree.state.reset();
@@ -93,7 +110,7 @@
     function setup3d() {
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 50);
         rendererThree = new THREE.WebGLRenderer();
 
         scene.background = new THREE.Color('pink'); //#85C1E9
@@ -104,7 +121,7 @@
         document.body.appendChild(rendererThree.domElement);
 
         let shinyMaterial = new THREE.MeshStandardMaterial({
-            color: 0x85C1E9,
+            color: 0x95D1F9,
             roughness: 1,
             flatShading: true
         });
@@ -130,8 +147,8 @@
         let plane = new THREE.Mesh(floorGeometry, shinyMaterial);
         // plane.position.x += 1000 / 2;
         // plane.position.y += 1000 / 2;
-        plane.position.z = 0;
-        // scene.add(plane);
+        plane.position.z = -2;
+        scene.add(plane);
 
         // light
         let dirLight;
@@ -149,7 +166,7 @@
         camera.rotation.y = -90 * Math.PI / 180;
         camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
 
-        bo = addTitleImage(scene);
+        addTitleImage(scene);
 
     }
 
@@ -159,7 +176,7 @@
         texture.minFilter = THREE.LinearFilter;
 
         let sideColor = 0x85C1E9;
-        var cubeMaterial = [
+        let cubeMaterial = [
             new THREE.MeshBasicMaterial({
                 map: texture, //left
                 fog: true,
@@ -190,66 +207,44 @@
         // preserve ratio
         let scale = 2;
         let geometry = new THREE.BoxBufferGeometry(.1, scale, scale * 375 / 500);
-        // let geometry = new THREE.PlaneGeometry(scale * 375 / 500, scale);
-        for (let i = 0; i < 1000; i++) {
-            let rotationAmount = 2 * Math.PI / 15 * i;
+        // for (let i = 0; i < 1000; i++) {
+        //     let rotationAmount = 2 * Math.PI / 17 * i;
+        //     let pivot = new THREE.Group();
+        //     let mesh = new THREE.Mesh(geometry, cubeMaterial);
+        //     mesh.position.set(i/17 + 10, 0, 5);
+        //     mesh.rotation.x = Math.PI / 2;
+        //     pivot.add(mesh);
+        //     pivot.rotation.x = rotationAmount;
+        //     scene.add(pivot);
+        // }
 
-
-            //Make a pivot
-            let pivot = new THREE.Group();
-
-
-            // make object
-            let mesh = new THREE.Mesh(geometry, cubeMaterial);
-            mesh.position.set(i/10 + 10, 0, 5);
-            mesh.rotation.x = Math.PI / 2;
-
-
-
-//Add object to pivot
-            pivot.add(mesh);
-            // pivot.position.set(new THREE.Vector3(0,0,0));
-
-//rotate the object around pivot
-            pivot.rotation.x = rotationAmount;
-
-            // mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), rotationAmount);
-            scene.add(pivot);
+        for (let i = 0; i < 100; i++) {
+            for (let j = 0; j < 16; j++) {
+                let rotationAmount = 2 * Math.PI / 16 * j;
+                let pivot = new THREE.Group();
+                let mesh = new THREE.Mesh(geometry, cubeMaterial);
+                mesh.position.set(i * 2 + 5, 0, 5);
+                mesh.rotation.x = Math.PI / 2;
+                pivot.add(mesh);
+                pivot.rotation.x = rotationAmount;
+                scene.add(pivot);
+            }
         }
-        let mesh = new THREE.Mesh(geometry, cubeMaterial);
-        return mesh;
-    }
-
-    function addTitleImageB(scene) {
-        let loader = new THREE.TextureLoader();
-        let texture = loader.load('images/girls/Bo Derek.jpg');
-        texture.minFilter = THREE.LinearFilter;
-        let material = new THREE.MeshLambertMaterial({
-            map: texture,
-            fog: true,
-            side: THREE.DoubleSide,
-            flatShading: true,
-            roughness: 1
-        });
-        // preserve ratio
-        let scale = 2;
-        let geometry = new THREE.PlaneGeometry(scale * 375 / 500, scale);
-            let mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(10, 0, 1);
-            mesh.rotation.y = -Math.PI / 2;
-            mesh.rotation.x = Math.PI / 2;
-            mesh.receiveShadow = false;
-            mesh.castShadow = false;
-            scene.add(mesh);
-        return mesh;
     }
 
 
     function render3d() {
         // game.render(fpsAdjustment);
         let now = Date.now();
-        camera.position.x += Math.sin(now / 100) * 0.02 + .025;
-        camera.position.z = Math.sin(now / 100) * 0.01 + 0.2;
+
+        // strut
+        //camera.position.x += Math.sin(now / 100) * 0.02 + .025;
+        camera.position.x = clock.eighthsFraction + Math.sin(clock.eighthsFraction * Math.PI) * 0.2;
+
+        // bounce
+        camera.position.z = Math.sin(now / 100) * 0.03;
+
+        // camera.rotation.y =  Math.PI / 2 * clock.bars;
 
         if (turningLeft) {
             // camera.rotation.y += 2 * Math.PI / 180;
@@ -259,8 +254,6 @@
             // camera.rotation.y += -2 * Math.PI / 180;
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -2 * Math.PI / 180);
         }
-
-        // bo.rotateOnWorldAxis(new THREE.Vector3(0,0,1), -2 * Math.PI / 180);
 
         rendererThree.render(scene, camera);
     }
@@ -300,6 +293,16 @@
     }
 
     function onDocumentKeyDown(event) {
+        if (!isPlaying) {
+            // those_girls_you_know.oncanplaythrough = function () {
+            those_girls_you_know.currentTime = clock.seconds;
+            those_girls_you_know.play();
+            // when music loaded, animate
+            isPlaying = true;
+            animate();
+            // };
+        }
+
         let keyCode = event["which"];
         if (keyCode === 37) {
             turningLeft = true;
