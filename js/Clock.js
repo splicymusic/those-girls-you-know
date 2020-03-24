@@ -6,6 +6,7 @@ class Clock {
         // the length of time for one section (4 bars)
         this.sectionSeconds = 11.163;
         this.barSeconds = this.sectionSeconds / 4;
+        this.quarterSeconds = this.barSeconds / 4;
         this.eighthSeconds = this.barSeconds / 8;
         this.startSeconds = this.calculateTime(sections, bars, eighths);
         this.startMillis = Math.round(this.startSeconds * 1000);
@@ -19,6 +20,7 @@ class Clock {
         this.seconds = (now - this.start) / 1000 + this.startSeconds;
         this.millis = (now - this.start) + this.startMillis;
         this.eighthsFraction = this.seconds / this.eighthSeconds;
+        this.quarterFraction = this.seconds / this.quarterSeconds;
         this.eighths =  Math.floor(this.seconds / this.eighthSeconds);
         this.bars = Math.floor(this.seconds / this.barSeconds);
         this.sections = Math.floor(this.seconds / this.sectionSeconds);
@@ -30,3 +32,4 @@ class Clock {
 }
 
 export default Clock;
+

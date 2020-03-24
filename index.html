@@ -34,6 +34,8 @@
 
     import * as THREE from "./lib/three/build/three.module.js";
     import Clock from "./js/Clock.js";
+    import * as Utils from "./js/Utils.js";
+    import GirlLoader from "./js/3d/GirlLoader.js";
 
     // stats
     let stats = new Stats();
@@ -62,11 +64,13 @@
 
     // 3d objects
     let scene, camera;
+    let loader = new THREE.TextureLoader();
 
     let turningLeft = false;
     let turningRight = false;
 
-    init();
+    // load in images, initialize 3D scene
+    let girlLoader = new GirlLoader(init);
 
 
     function init() {
@@ -87,6 +91,9 @@
         // starting our clock, defining start position in animation
         clock = new Clock(0, 0, 0);
     }
+
+
+
 
 
     function animate() {
@@ -127,7 +134,7 @@
         });
 
         let arenaSize = 50;
-        let canyonWidth = 4;
+        let canyonWidth = 6;
         let leftBound = -canyonWidth;
         let rightBound = canyonWidth;
         for (let i = 0; i < 500; i++) {
@@ -143,8 +150,13 @@
         }
 
         // floor
+        let floorMaterial = new THREE.MeshStandardMaterial({
+            color: 0xEEEEFF,
+            roughness: 1,
+            flatShading: true
+        });
         let floorGeometry = new THREE.PlaneGeometry(1000, 1000);
-        let plane = new THREE.Mesh(floorGeometry, shinyMaterial);
+        let plane = new THREE.Mesh(floorGeometry, floorMaterial);
         // plane.position.x += 1000 / 2;
         // plane.position.y += 1000 / 2;
         plane.position.z = -2;
@@ -167,69 +179,91 @@
         camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
 
         addTitleImage(scene);
+        addDiana(scene);
+
+
 
     }
 
     function addTitleImage(scene) {
-        let loader = new THREE.TextureLoader();
-        let texture = loader.load('images/girls/Bo Derek.jpg');
-        texture.minFilter = THREE.LinearFilter;
 
-        let sideColor = 0x85C1E9;
-        let cubeMaterial = [
-            new THREE.MeshBasicMaterial({
-                map: texture, //left
-                fog: true,
-            }),
-            new THREE.MeshBasicMaterial({
-                map: texture, //right
-                fog: true,
-            }),
-            new THREE.MeshBasicMaterial({
-                color: sideColor, // top
-                fog: true,
-            }),
-            new THREE.MeshBasicMaterial({
-                color: sideColor, // bottom
-                fog: true,
-            }),
-            new THREE.MeshBasicMaterial({
-                color: sideColor, // front
-                fog: true,
-            }),
-            new THREE.MeshBasicMaterial({
-                color: sideColor, //back
-                fog: true,
-            })
-        ];
+        //let texture = loader.load('images/girls/Bo Derek/Bo Derek.jpg');
+        let keys = Object.keys(girlLoader.girls);
+
 
 
         // preserve ratio
         let scale = 2;
-        let geometry = new THREE.BoxBufferGeometry(.1, scale, scale * 375 / 500);
-        // for (let i = 0; i < 1000; i++) {
-        //     let rotationAmount = 2 * Math.PI / 17 * i;
-        //     let pivot = new THREE.Group();
-        //     let mesh = new THREE.Mesh(geometry, cubeMaterial);
-        //     mesh.position.set(i/17 + 10, 0, 5);
-        //     mesh.rotation.x = Math.PI / 2;
-        //     pivot.add(mesh);
-        //     pivot.rotation.x = rotationAmount;
-        //     scene.add(pivot);
-        // }
 
+        let boStart = Utils.locationInSong(1, 0, 0);
         for (let i = 0; i < 100; i++) {
+            let key = keys[i % keys.length];
+            let texture = girlLoader.girls[key];
+            let geometry = new THREE.BoxBufferGeometry(.1, scale, scale * texture.image.width / texture.image.height);
+            let sideColor = 0x85C1E9;
+            let cubeMaterial = [
+                new THREE.MeshBasicMaterial({
+                    map: texture, //left
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    map: texture, //right
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // top
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // bottom
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // front
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, //back
+                    fog: true,
+                })
+            ];
+
             for (let j = 0; j < 16; j++) {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let pivot = new THREE.Group();
                 let mesh = new THREE.Mesh(geometry, cubeMaterial);
-                mesh.position.set(i * 2 + 5, 0, 5);
+                mesh.position.set(i * 4 + boStart, 0, 5);
                 mesh.rotation.x = Math.PI / 2;
                 pivot.add(mesh);
                 pivot.rotation.x = rotationAmount;
                 scene.add(pivot);
             }
         }
+    }
+
+    function addDiana(scene) {
+        let texture = loader.load('images/girls/Diana Ross/1.png');
+        // let texture = loader.load('images/girls/Catherine Bach/1.png');
+        texture.minFilter = THREE.LinearFilter;
+        let material = new THREE.MeshLambertMaterial({
+            map: texture,
+            fog: true,
+            side: THREE.DoubleSide,
+            transparent: true
+        });
+        // preserve ratio
+        let scale = 4;
+        let geometry = new THREE.PlaneGeometry(scale * 570 / 799, scale);
+        // let geometry = new THREE.PlaneGeometry(scale * 374 / 684, scale);
+        let mesh = new THREE.Mesh(geometry, material);
+        let loc = Utils.locationInSong(1, 0, 0);
+        mesh.position.set(loc, 0, -1);
+        mesh.rotation.y = -Math.PI / 2;
+        mesh.rotation.x = Math.PI / 2;
+        mesh.receiveShadow = false;
+        mesh.castShadow = false;
+        scene.add(mesh);
+        return mesh;
     }
 
 
@@ -239,19 +273,20 @@
 
         // strut
         //camera.position.x += Math.sin(now / 100) * 0.02 + .025;
-        camera.position.x = clock.eighthsFraction + Math.sin(clock.eighthsFraction * Math.PI) * 0.2;
+        // if (clock.eighthsFraction <= 34) {
+        camera.position.x = clock.eighthsFraction + Math.sin(clock.eighthsFraction * Math.PI) * 0.15;
+        // }
+
 
         // bounce
-        camera.position.z = Math.sin(now / 100) * 0.03;
+        camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.03;
 
         // camera.rotation.y =  Math.PI / 2 * clock.bars;
 
         if (turningLeft) {
-            // camera.rotation.y += 2 * Math.PI / 180;
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), 2 * Math.PI / 180);
         }
         if (turningRight) {
-            // camera.rotation.y += -2 * Math.PI / 180;
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -2 * Math.PI / 180);
         }
 
@@ -262,35 +297,6 @@
         // activeScreen.render();
     }
 
-
-    function startAudio() {
-        // if (!audioContext) {
-        //     // https://stackoverflow.com/questions/9811429/html5-audio-tag-on-safari-has-a-delay
-        //     const AudioContext = window.AudioContext || window.webkitAudioContext;
-        //     audioContext = new AudioContext();
-        // }
-        // if (sounds && !soundsLoaded) {
-        //     for (let audio of Object.values(sounds)) {
-        //         audio.play();
-        //         audio.pause();
-        //         audio.currentTime = 0;
-        //     }
-        //     soundsLoaded = true;
-        // }
-        // if (musicOn && !songs.isSongPlaying) {
-        //     // gapless audio loop
-        //     // https://stackoverflow.com/questions/7330023/gapless-looping-audio-html5
-        //     songs.motel_bedroom.addEventListener('timeupdate', function () {
-        //         let buffer = .4;
-        //         if (this.currentTime > this.duration - buffer) {
-        //             this.currentTime = 0;
-        //             this.play();
-        //         }
-        //     }, false);
-        //     songs.motel_bedroom.play();
-        //     songs.isSongPlaying = true;
-        // }
-    }
 
     function onDocumentKeyDown(event) {
         if (!isPlaying) {
