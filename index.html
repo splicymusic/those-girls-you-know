@@ -29,23 +29,18 @@
 </head>
 <body>
 <script src='lib/stats.js/build/stats.min.js'></script>
-<script src='lib/pixi.min.js'></script>
 <script type="module">
 
     import * as THREE from "./lib/three/build/three.module.js";
     import Clock from "./js/Clock.js";
     import * as Utils from "./js/Utils.js";
     import GirlLoader from "./js/3d/Loader.js";
+    import Tunnel from "./js/3d/Tunnel.js";
 
     // stats
     let stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild(stats.dom);
-
-    //2D
-    // try: https://stackoverflow.com/questions/19002850/custom-font-in-pixi-js
-    // const loader = new PIXI.loaders.Loader();
-    // loader.add('alba', 'fonts/ALBAS___.TTF');
 
     // audio
     let those_girls_you_know = new Audio('music/Those Girls You Know_6.mp3');
@@ -55,18 +50,21 @@
 
     // let audioContext = null;
 
-    let clock;
-
+    let clock = new Clock(0, 0, 0);
 
     // Renderers
     let rendererThree;
-    let rendererPixi;
 
     // 3d objects
     let scene, camera;
     let loader = new THREE.TextureLoader();
     let points;
-    let cards = [];
+
+    let groups = [];
+    let tunnel = null;
+
+
+
 
     let turningLeft = false;
     let turningRight = false;
@@ -86,10 +84,6 @@
         rendererThree = new THREE.WebGLRenderer({
             canvas: canvas
         });
-        // rendererPixi = new PIXI.Renderer({
-        //     view: canvas,
-        //     context: rendererThree.getContext()
-        // });
 
         setup3d();
 
@@ -99,7 +93,7 @@
         document.addEventListener('touchstart', touchStart, {passive: false});
 
         // starting our clock, defining start position in animation
-        clock = new Clock(0, 0, 0);
+        clock.start();
     }
 
 
@@ -112,10 +106,6 @@
         rendererThree.state.reset();
         render3d();
         rendererThree.state.reset();
-
-        // rendererPixi.reset();
-        // render2d();
-        // rendererPixi.reset();
 
         stats.end();
         requestAnimationFrame(animate);
@@ -173,11 +163,13 @@
         // var helper = new THREE.CameraHelper( dirLight.shadow.camera );
         // scene.add( helper );
 
-        addTitleImage(scene);
         addDiana(scene);
         addPoints(scene);
-        addBuildings(scene)
-        addTitle(scene)
+        addBuildings(scene);
+        addTitle(scene);
+
+        tunnel = new Tunnel(scene, clock, girlLoader);
+        groups.push(tunnel);
 
 
     }
@@ -235,106 +227,7 @@
         scene.add(points);
     }
 
-    function addTitleImage(scene) {
 
-        //let texture = loader.load('images/girls/Bo Derek/Bo Derek.jpg');
-        let keys = Object.keys(girlLoader.girls);
-
-
-        // preserve ratio
-        let scale = 2;
-        let sideColor = 0x85C1E9;
-
-        let innerStart = Utils.locationInSong(1, 0, 0);
-        let outerStart = Utils.locationInSong(1, 0, 2);
-        for (let i = 0; i < 100; i++) {
-            let keyA = keys[i % keys.length];
-            let textureA = girlLoader.girls[keyA];
-            let geometryA = new THREE.BoxBufferGeometry(.1, scale, scale * textureA.image.width / textureA.image.height);
-            let cardMaterialA = [
-                new THREE.MeshBasicMaterial({
-                    map: textureA, //left
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    map: textureA, //right
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // top
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // bottom
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // front
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, //back
-                    fog: true,
-                })
-            ];
-
-            for (let j = 0; j < 16; j++) {
-                let rotationAmount = 2 * Math.PI / 16 * j;
-                let pivot = new THREE.Group();
-                let mesh = new THREE.Mesh(geometryA, cardMaterialA);
-                mesh.position.set(i * 4 + innerStart + j * .25, 0, 5);
-                // mesh.position.set(i * 4 + innerStart, 0, 5);
-                mesh.rotation.x = Math.PI / 2;
-                pivot.add(mesh);
-                pivot.rotation.x = rotationAmount + Math.PI;
-                mesh.visible = false;
-                cards.push(mesh);
-                scene.add(pivot);
-            }
-
-            let keyB = keys[(i + 2) % keys.length];
-            let textureB = girlLoader.girls[keyB];
-            let geometryB = new THREE.BoxBufferGeometry(.1, 3, 3 * textureB.image.width / textureB.image.height);
-            let cardMaterialB = [
-                new THREE.MeshBasicMaterial({
-                    map: textureB, //left
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    map: textureB, //right
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // top
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // bottom
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, // front
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    color: sideColor, //back
-                    fog: true,
-                })
-            ];
-
-            for (let j = 0; j < 16; j++) {
-                let rotationAmount = 2 * Math.PI / 16 * j;
-                let pivot = new THREE.Group();
-                let mesh = new THREE.Mesh(geometryB, cardMaterialB);
-                // mesh.position.set(i * 4 + outerStart + j / 4, 0, 9);
-                mesh.position.set(i * 4 + outerStart, 0, 9);
-                mesh.rotation.x = Math.PI / 2;
-                pivot.add(mesh);
-                pivot.rotation.x = rotationAmount + Math.PI / 16 + Math.PI;
-                // scene.add(pivot);
-            }
-        }
-    }
 
     function addTitle(scene) {
         let texture = loader.load('images/title card.png');
@@ -427,43 +320,16 @@
         }
 
 
-        let effectIndex = clock.bar % 4;
-        if (clock.eighthsFraction >= 32.5) {
-            cards.forEach(mesh => {
-                mesh.visible = true;
-                if (clock.quarter >= 64 + 16) {
-                    if (effectIndex === 0) {
-                        mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
-                    }
-                    if (effectIndex === 1) {
-                        mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180);
-                        // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-                    }
-                    if (effectIndex === 2) {
-                        mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
-                        // mesh.rotateZ(0.1);
-                    }
-                    if (effectIndex === 3) {
-                        mesh.rotateOnAxis(new THREE.Vector3(0, 1, 1), -1 * Math.PI / 180);
-                        // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-                    }
-                    // mesh.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
-                    // mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180);
-                    // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 20);
-                    // mesh.translateY(.05);
-                }
+        groups.forEach(group => {
+            group.update(camera.position);
+        });
 
-                // mesh.position.x -= .1;
-            });
-        }
+
 
 
         rendererThree.render(scene, camera);
     }
 
-    function render2d() {
-        // activeScreen.render();
-    }
 
     function play() {
         if (!isPlaying) {

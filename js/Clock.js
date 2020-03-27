@@ -2,7 +2,6 @@
 
 class Clock {
     constructor(sections, bars, eighths) {
-        this.start = Date.now();
         // the length of time for one section (4 bars)
         this.sectionSeconds = 11.163;
         this.barSeconds = this.sectionSeconds / 4;
@@ -12,6 +11,10 @@ class Clock {
         this.startMillis = Math.round(this.startSeconds * 1000);
         this.seconds = this.startSeconds;
         this.millis = this.startMillis;
+    }
+
+    start() {
+        this.start = Date.now();
     }
 
     update() {
