@@ -1,17 +1,12 @@
 
-class Bar {
+class Bar extends Group {
 
-    constructor(scene, clock) {
-        this.scene = scene;
-        this.clock = clock;
+    constructor(scene, clock, loader) {
+        super(scene,clock, loader);
     }
 
-    setPosition(section, bar) {
-        this.section = section;
-        this.bar = bar;
-    }
 
-    animate() {
+    update() {
 
     }
 }

@@ -21,9 +21,10 @@ class Clock {
         this.millis = (now - this.start) + this.startMillis;
         this.eighthsFraction = this.seconds / this.eighthSeconds;
         this.quarterFraction = this.seconds / this.quarterSeconds;
-        this.eighths =  Math.floor(this.seconds / this.eighthSeconds);
-        this.bars = Math.floor(this.seconds / this.barSeconds);
-        this.sections = Math.floor(this.seconds / this.sectionSeconds);
+        this.eighth =  Math.floor(this.seconds / this.eighthSeconds);
+        this.quarter =  Math.floor(this.seconds / this.quarterSeconds);
+        this.bar = Math.floor(this.seconds / this.barSeconds);
+        this.section = Math.floor(this.seconds / this.sectionSeconds);
     }
 
     calculateTime(sections, bars, eighths) {

@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             position: fixed;
-            background-color: #000000;
+            /*background-color: #000000;*/
         }
 
         canvas {
@@ -35,7 +35,7 @@
     import * as THREE from "./lib/three/build/three.module.js";
     import Clock from "./js/Clock.js";
     import * as Utils from "./js/Utils.js";
-    import GirlLoader from "./js/3d/GirlLoader.js";
+    import GirlLoader from "./js/3d/Loader.js";
 
     // stats
     let stats = new Stats();
@@ -48,7 +48,7 @@
     // loader.add('alba', 'fonts/ALBAS___.TTF');
 
     // audio
-    let those_girls_you_know = new Audio('music/Those Girls You Know_5.mp3');
+    let those_girls_you_know = new Audio('music/Those Girls You Know_6.mp3');
     if (those_girls_you_know) those_girls_you_know.loop = false;
     let isPlaying = false;
 
@@ -65,12 +65,20 @@
     // 3d objects
     let scene, camera;
     let loader = new THREE.TextureLoader();
+    let points;
+    let cards = [];
 
     let turningLeft = false;
     let turningRight = false;
+    let goingUp = false;
+    let goingDown = false;
 
     // load in images, initialize 3D scene
     let girlLoader = new GirlLoader(init);
+
+    // load images
+    // load music
+    // init
 
 
     function init() {
@@ -78,22 +86,21 @@
         rendererThree = new THREE.WebGLRenderer({
             canvas: canvas
         });
-        rendererPixi = new PIXI.Renderer({
-            view: canvas,
-            context: rendererThree.getContext()
-        });
+        // rendererPixi = new PIXI.Renderer({
+        //     view: canvas,
+        //     context: rendererThree.getContext()
+        // });
 
         setup3d();
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
+        document.addEventListener('mouseup', mouseUp, false);
+        document.addEventListener('touchstart', touchStart, {passive: false});
 
         // starting our clock, defining start position in animation
         clock = new Clock(0, 0, 0);
     }
-
-
-
 
 
     function animate() {
@@ -106,9 +113,9 @@
         render3d();
         rendererThree.state.reset();
 
-        rendererPixi.reset();
-        render2d();
-        rendererPixi.reset();
+        // rendererPixi.reset();
+        // render2d();
+        // rendererPixi.reset();
 
         stats.end();
         requestAnimationFrame(animate);
@@ -120,13 +127,62 @@
         camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 50);
         rendererThree = new THREE.WebGLRenderer();
 
-        scene.background = new THREE.Color('pink'); //#85C1E9
+        scene.background = new THREE.Color(0x85C1E9); //#85C1E9
         scene.fog = new THREE.FogExp2('white', 0.05);
         scene.color = 0xFFFFFF;
 
         rendererThree.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(rendererThree.domElement);
 
+
+        // floor
+        let floorMaterial = new THREE.MeshStandardMaterial({
+            color: 0xFFCCDD,
+            roughness: 1,
+            flatShading: true
+        });
+        let floorGeometry = new THREE.PlaneGeometry(1000, 3);
+        let plane = new THREE.Mesh(floorGeometry, floorMaterial);
+        // plane.position.x += 1000 / 2;
+        // plane.position.y += 1000 / 2;
+        // plane.position.x = Utils.locationInSong(1, 0, 0) + 1000 / 2;
+        plane.position.z = -2;
+        scene.add(plane);
+
+        // light
+        let dirLight;
+        dirLight = new THREE.DirectionalLight(0xFFFFFF);
+        // dirLight = new THREE.PointLight( 0xffffff, 1, 0 );
+        dirLight.position.set(-2, 5, 3).normalize();
+        // dirLight.position.set(20, 0, 100);
+        dirLight.rotation.x = Math.PI / 4;
+        // dirLight.castShadow = true;
+        // dirLight.shadowDarkness = 0.5;
+        scene.add(dirLight);
+
+        let light = new THREE.AmbientLight(0xFFFFFF); // soft white light
+        scene.add(light);
+
+        camera.position.z = .3;
+        camera.position.x = 0;
+        camera.position.y = 0;
+        camera.rotation.x = 90 * Math.PI / 180;
+        camera.rotation.y = -90 * Math.PI / 180;
+        camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
+
+        // var helper = new THREE.CameraHelper( dirLight.shadow.camera );
+        // scene.add( helper );
+
+        addTitleImage(scene);
+        addDiana(scene);
+        addPoints(scene);
+        addBuildings(scene)
+        addTitle(scene)
+
+
+    }
+
+    function addBuildings(scene) {
         let shinyMaterial = new THREE.MeshStandardMaterial({
             color: 0x95D1F9,
             roughness: 1,
@@ -138,7 +194,7 @@
         let leftBound = -canyonWidth;
         let rightBound = canyonWidth;
         for (let i = 0; i < 500; i++) {
-            let cubeX = randomInt(arenaSize);
+            let cubeX = randomInt(arenaSize) - arenaSize;
             let cubeY = randomInt(arenaSize) - arenaSize / 2;
             if (cubeY > leftBound && cubeY < rightBound) continue;
             let geometry = new THREE.BoxGeometry(1, 1, randomInt(15) + 5);
@@ -148,41 +204,35 @@
             cube.position.y = cubeY;
             scene.add(cube);
         }
+    }
 
-        // floor
-        let floorMaterial = new THREE.MeshStandardMaterial({
-            color: 0xEEEEFF,
-            roughness: 1,
-            flatShading: true
+    function addPoints(scene) {
+        var vertices = [];
+
+        for (var i = 0; i < 100000; i++) {
+
+            var x = Math.random() * 2000 - 50;
+            var y = Math.random() * 100 - 50;
+            var z = Math.random() * 100 - 50;
+
+            if (Math.sqrt(z * z + y * y) < 15) continue;
+
+            vertices.push(x, y, z);
+
+        }
+
+        var geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+        let randomColor = new THREE.Color("hsl(" + randomInt(255) + ", 100%, 50%)");
+        var material = new THREE.PointsMaterial({
+            color: 0xFFFF00,
+            size: 0.3
         });
-        let floorGeometry = new THREE.PlaneGeometry(1000, 1000);
-        let plane = new THREE.Mesh(floorGeometry, floorMaterial);
-        // plane.position.x += 1000 / 2;
-        // plane.position.y += 1000 / 2;
-        plane.position.z = -2;
-        scene.add(plane);
 
-        // light
-        let dirLight;
-        dirLight = new THREE.DirectionalLight(0xFFFFFF);
-        dirLight.position.set(-2, 5, 3).normalize();
-        scene.add(dirLight);
+        points = new THREE.Points(geometry, material);
 
-        let light = new THREE.AmbientLight(0xFFFFFF); // soft white light
-        scene.add(light);
-
-        camera.position.z = 0;
-        camera.position.x = 0;
-        camera.position.y = 0;
-        camera.rotation.x = 90 * Math.PI / 180;
-        camera.rotation.y = -90 * Math.PI / 180;
-        camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
-
-        addTitleImage(scene);
-        addDiana(scene);
-
-
-
+        scene.add(points);
     }
 
     function addTitleImage(scene) {
@@ -191,23 +241,23 @@
         let keys = Object.keys(girlLoader.girls);
 
 
-
         // preserve ratio
         let scale = 2;
+        let sideColor = 0x85C1E9;
 
-        let boStart = Utils.locationInSong(1, 0, 0);
+        let innerStart = Utils.locationInSong(1, 0, 0);
+        let outerStart = Utils.locationInSong(1, 0, 2);
         for (let i = 0; i < 100; i++) {
-            let key = keys[i % keys.length];
-            let texture = girlLoader.girls[key];
-            let geometry = new THREE.BoxBufferGeometry(.1, scale, scale * texture.image.width / texture.image.height);
-            let sideColor = 0x85C1E9;
-            let cubeMaterial = [
+            let keyA = keys[i % keys.length];
+            let textureA = girlLoader.girls[keyA];
+            let geometryA = new THREE.BoxBufferGeometry(.1, scale, scale * textureA.image.width / textureA.image.height);
+            let cardMaterialA = [
                 new THREE.MeshBasicMaterial({
-                    map: texture, //left
+                    map: textureA, //left
                     fog: true,
                 }),
                 new THREE.MeshBasicMaterial({
-                    map: texture, //right
+                    map: textureA, //right
                     fog: true,
                 }),
                 new THREE.MeshBasicMaterial({
@@ -231,18 +281,87 @@
             for (let j = 0; j < 16; j++) {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let pivot = new THREE.Group();
-                let mesh = new THREE.Mesh(geometry, cubeMaterial);
-                mesh.position.set(i * 4 + boStart, 0, 5);
+                let mesh = new THREE.Mesh(geometryA, cardMaterialA);
+                mesh.position.set(i * 4 + innerStart + j * .25, 0, 5);
+                // mesh.position.set(i * 4 + innerStart, 0, 5);
                 mesh.rotation.x = Math.PI / 2;
                 pivot.add(mesh);
-                pivot.rotation.x = rotationAmount;
+                pivot.rotation.x = rotationAmount + Math.PI;
+                mesh.visible = false;
+                cards.push(mesh);
                 scene.add(pivot);
+            }
+
+            let keyB = keys[(i + 2) % keys.length];
+            let textureB = girlLoader.girls[keyB];
+            let geometryB = new THREE.BoxBufferGeometry(.1, 3, 3 * textureB.image.width / textureB.image.height);
+            let cardMaterialB = [
+                new THREE.MeshBasicMaterial({
+                    map: textureB, //left
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    map: textureB, //right
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // top
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // bottom
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, // front
+                    fog: true,
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: sideColor, //back
+                    fog: true,
+                })
+            ];
+
+            for (let j = 0; j < 16; j++) {
+                let rotationAmount = 2 * Math.PI / 16 * j;
+                let pivot = new THREE.Group();
+                let mesh = new THREE.Mesh(geometryB, cardMaterialB);
+                // mesh.position.set(i * 4 + outerStart + j / 4, 0, 9);
+                mesh.position.set(i * 4 + outerStart, 0, 9);
+                mesh.rotation.x = Math.PI / 2;
+                pivot.add(mesh);
+                pivot.rotation.x = rotationAmount + Math.PI / 16 + Math.PI;
+                // scene.add(pivot);
             }
         }
     }
 
+    function addTitle(scene) {
+        let texture = loader.load('images/title card.png');
+        texture.minFilter = THREE.LinearFilter;
+        let material = new THREE.MeshLambertMaterial({
+            map: texture,
+            fog: true,
+            side: THREE.DoubleSide,
+            transparent: true
+        });
+        let scale = 6;
+        let geometry = new THREE.PlaneGeometry(scale * 1000 / 1000, scale); // those girls
+        let mesh = new THREE.Mesh(geometry, material);
+        let loc = Utils.locationInSong(0, 2, 0);
+        mesh.position.set(loc, 0, .5);
+        mesh.rotation.y = -Math.PI / 2;
+        mesh.rotation.x = Math.PI / 2;
+        mesh.receiveShadow = false;
+        mesh.castShadow = false;
+        scene.add(mesh);
+
+    }
+
     function addDiana(scene) {
-        let texture = loader.load('images/girls/Diana Ross/1.png');
+        let texture = girlLoader.girls["images/girls/Carrie Fisher/main.png"];
+        // let texture = loader.load('images/girls/Diana Ross/1.png');
+        // let texture = loader.load('images/those-girls.png');
         // let texture = loader.load('images/girls/Catherine Bach/1.png');
         texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshLambertMaterial({
@@ -252,18 +371,26 @@
             transparent: true
         });
         // preserve ratio
-        let scale = 4;
-        let geometry = new THREE.PlaneGeometry(scale * 570 / 799, scale);
-        // let geometry = new THREE.PlaneGeometry(scale * 374 / 684, scale);
-        let mesh = new THREE.Mesh(geometry, material);
-        let loc = Utils.locationInSong(1, 0, 0);
-        mesh.position.set(loc, 0, -1);
-        mesh.rotation.y = -Math.PI / 2;
-        mesh.rotation.x = Math.PI / 2;
-        mesh.receiveShadow = false;
-        mesh.castShadow = false;
-        scene.add(mesh);
-        return mesh;
+        let scale = 5;
+        let geometry = new THREE.PlaneGeometry(scale * texture.image.width / texture.image.height, scale); // Stevie
+        // let geometry = new THREE.PlaneGeometry(scale * 500 / 371, scale); // those girls
+        // let geometry = new THREE.PlaneGeometry(scale * 570 / 799, scale); // diana
+        // let geometry = new THREE.PlaneGeometry(scale * 374 / 684, scale); // catharine
+        for (let i = 0; i < 16; i++) {
+            let mesh = new THREE.Mesh(geometry, material);
+            let loc = Utils.locationInSong(1 + Math.floor(i / 2), i % 2 * 2, 0);
+            // // let loc = Utils.locationInSong(1 + i/2, 0, 0);
+            // if (i % 2 === 1) {
+            //     loc = Utils.locationInSong(1 + Math.floor(i/2), i % 2 * 2, 0);
+            // }
+            //
+            mesh.position.set(loc, 0, .5);
+            mesh.rotation.y = -Math.PI / 2;
+            mesh.rotation.x = Math.PI / 2;
+            mesh.receiveShadow = false;
+            mesh.castShadow = false;
+            scene.add(mesh);
+        }
     }
 
 
@@ -274,21 +401,62 @@
         // strut
         //camera.position.x += Math.sin(now / 100) * 0.02 + .025;
         // if (clock.eighthsFraction <= 34) {
-        camera.position.x = clock.eighthsFraction + Math.sin(clock.eighthsFraction * Math.PI) * 0.15;
+        camera.position.x = clock.eighthsFraction * 1 + Math.cos(clock.eighthsFraction * Math.PI) * 0.15;
+        // camera.position.x = clock.eighthsFraction;
         // }
 
 
         // bounce
-        camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.03;
+        camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
 
         // camera.rotation.y =  Math.PI / 2 * clock.bars;
+        points.rotation.x = Math.PI * clock.eighthsFraction / 180;
 
         if (turningLeft) {
-            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), 2 * Math.PI / 180);
+            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI / 180);
         }
         if (turningRight) {
-            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -2 * Math.PI / 180);
+            camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
+
         }
+        if (goingUp) {
+            camera.position.z += .2;
+        }
+        if (goingDown) {
+            camera.position.z -= .2;
+        }
+
+
+        let effectIndex = clock.bar % 4;
+        if (clock.eighthsFraction >= 32.5) {
+            cards.forEach(mesh => {
+                mesh.visible = true;
+                if (clock.quarter >= 64 + 16) {
+                    if (effectIndex === 0) {
+                        mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
+                    }
+                    if (effectIndex === 1) {
+                        mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180);
+                        // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
+                    }
+                    if (effectIndex === 2) {
+                        mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
+                        // mesh.rotateZ(0.1);
+                    }
+                    if (effectIndex === 3) {
+                        mesh.rotateOnAxis(new THREE.Vector3(0, 1, 1), -1 * Math.PI / 180);
+                        // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
+                    }
+                    // mesh.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
+                    // mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180);
+                    // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 20);
+                    // mesh.translateY(.05);
+                }
+
+                // mesh.position.x -= .1;
+            });
+        }
+
 
         rendererThree.render(scene, camera);
     }
@@ -297,8 +465,7 @@
         // activeScreen.render();
     }
 
-
-    function onDocumentKeyDown(event) {
+    function play() {
         if (!isPlaying) {
             // those_girls_you_know.oncanplaythrough = function () {
             those_girls_you_know.currentTime = clock.seconds;
@@ -308,6 +475,11 @@
             animate();
             // };
         }
+    }
+
+
+    function onDocumentKeyDown(event) {
+        play();
 
         let keyCode = event["which"];
         if (keyCode === 37) {
@@ -315,15 +487,37 @@
         } else if (keyCode === 39) {
             turningRight = true;
         }
+
+        if (keyCode === 37 || keyCode === 65) {
+            turningLeft = true;
+        } else if (keyCode === 38 || keyCode === 87) {
+            goingUp = true;
+        } else if (keyCode === 39 || keyCode === 68) {
+            turningRight = true;
+        } else if (keyCode === 40 || keyCode === 83) {
+            goingDown = true;
+        }
     }
 
     function onDocumentKeyUp(event) {
         let keyCode = event["which"];
-        if (keyCode === 37) {
+        if (keyCode === 37 || keyCode === 65) {
             turningLeft = false;
-        } else if (keyCode === 39) {
+        } else if (keyCode === 38 || keyCode === 87) {
+            goingUp = false;
+        } else if (keyCode === 39 || keyCode === 68) {
             turningRight = false;
+        } else if (keyCode === 40 || keyCode === 83) {
+            goingDown = false;
         }
+    }
+
+    function mouseUp(event) {
+        play();
+    }
+
+    function touchStart(event) {
+        play();
     }
 
     function randomInt(max) {

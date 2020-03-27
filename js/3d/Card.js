@@ -28,7 +28,6 @@ class Card {
         let mesh = new THREE.Mesh(geometry, cubeMaterial);
         mesh.rotation.x = Math.PI / 2;
         this.object = mesh;
-
     }
 }
 
