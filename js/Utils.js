@@ -7,3 +7,8 @@ export function locationInSong(sections, bars, eighths) {
     // adding 2 for the quarter note (two eights) that we come in on
     return sections * sectionLength + bars * barSeconds + eighths * eighthSeconds + 2;
 }
+
+
+export function randomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}

@@ -1,5 +1,5 @@
 
-class Group {
+class Actor {
 
     constructor(scene, clock, loader) {
         this.scene = scene;
@@ -12,4 +12,4 @@ class Group {
     }
 }
 
-export default Group;
+export default Actor;

@@ -1,4 +1,4 @@
-import * as THREE from "../../lib/three/build/three.module.js";
+import * as THREE from "../lib/three/build/three.module.js";
 
 class Loader {
 
@@ -31,7 +31,8 @@ class Loader {
 
 
     // loads an image then calls itself.
-    // if no more images to load, callback is called
+    // if no more images to load, callback is called.
+    // Probably a good async way to do this, but no time to learn that right now!
     loadGirl(callback) {
 
         if (this.index < this.array.length) {

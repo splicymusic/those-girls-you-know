@@ -1,18 +1,24 @@
-import * as THREE from "../../lib/three/build/three.module.js";
-import * as Utils from "../Utils.js";
-import Group from "./Group.js";
+import * as THREE from "../../../lib/three/build/three.module.js";
+import * as Utils from "../../Utils.js";
+import Actor from "../Actor.js";
+import Card from "./Card.js";
 
-class Tunnel extends Group {
+
+class Tunnel extends Actor {
     constructor(scene, clock, loader) {
         super(scene, clock, loader);
         this.inner = [];
+        this.outer = [];
 
+        this.createSpiral(this.inner, 5, Utils.locationInSong(1, 0, 0), 2, 0);
+        this.createSpiral(this.outer, 9, Utils.locationInSong(1, 0, 2), 3, 2);
+    }
+
+    createSpiral(array, radius, startX, scale, offset) {
         //let texture = loader.load('images/girls/Bo Derek/Bo Derek.jpg');
-        let keys = Object.keys(loader.girls);
-
+        let keys = Object.keys(this.loader.girls);
 
         // preserve ratio
-        let scale = 2;
         let sideColor = 0x85C1E9;
 
         let edgeMaterial = new THREE.MeshBasicMaterial({
@@ -20,11 +26,9 @@ class Tunnel extends Group {
             fog: true,
         });
 
-        let innerStart = Utils.locationInSong(1, 0, 0);
-        let outerStart = Utils.locationInSong(1, 0, 2);
         for (let i = 0; i < 100; i++) {
-            let keyA = keys[i % keys.length];
-            let textureA = loader.girls[keyA];
+            let key = keys[(i + offset) % keys.length];
+            let textureA = this.loader.girls[key];
             let geometryA = new THREE.BoxBufferGeometry(.1, scale, scale * textureA.image.width / textureA.image.height);
             let cardMaterialA = [
                 new THREE.MeshBasicMaterial({
@@ -45,45 +49,16 @@ class Tunnel extends Group {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let pivot = new THREE.Group();
                 let mesh = new THREE.Mesh(geometryA, cardMaterialA);
-                mesh.position.set(i * 4 + innerStart + j * .25, 0, 5);
+                mesh.position.set(i * 4 + startX + j * .25, 0, radius);
                 // mesh.position.set(i * 4 + innerStart, 0, 5);
                 mesh.rotation.x = Math.PI / 2;
                 pivot.add(mesh);
                 pivot.rotation.x = rotationAmount + Math.PI;
                 // mesh.visible = false;
-                this.inner.push(mesh);
-                scene.add(pivot);
+                array.push(mesh);
+                this.scene.add(pivot);
             }
 
-            let keyB = keys[(i + 2) % keys.length];
-            let textureB = loader.girls[keyB];
-            let geometryB = new THREE.BoxBufferGeometry(.1, 3, 3 * textureB.image.width / textureB.image.height);
-            let cardMaterialB = [
-                new THREE.MeshBasicMaterial({
-                    map: textureB, //left
-                    fog: true,
-                }),
-                new THREE.MeshBasicMaterial({
-                    map: textureB, //right
-                    fog: true,
-                }),
-                edgeMaterial,
-                edgeMaterial,
-                edgeMaterial,
-                edgeMaterial
-            ];
-
-            for (let j = 0; j < 16; j++) {
-                let rotationAmount = 2 * Math.PI / 16 * j;
-                let pivot = new THREE.Group();
-                let mesh = new THREE.Mesh(geometryB, cardMaterialB);
-                // mesh.position.set(i * 4 + outerStart + j / 4, 0, 9);
-                mesh.position.set(i * 4 + outerStart, 0, 9);
-                mesh.rotation.x = Math.PI / 2;
-                pivot.add(mesh);
-                pivot.rotation.x = rotationAmount + Math.PI / 16 + Math.PI;
-                scene.add(pivot);
-            }
         }
     }
 
