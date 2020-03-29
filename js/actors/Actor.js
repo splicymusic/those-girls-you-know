@@ -7,7 +7,7 @@ class Actor {
         this.loader = loader;
     }
 
-    update(cameraPosition) {
+    update(cameraPosition, fpsAdjustment) {
 
     }
 }

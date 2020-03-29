@@ -32,7 +32,7 @@ class Buildings extends Actor {
 
 
 
-    update(cameraPosition) {
+    update(cameraPosition, fpsAdjustment) {
 
     }
 

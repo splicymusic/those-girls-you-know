@@ -38,7 +38,7 @@ class Stars extends Actor {
 
 
 
-    update(cameraPosition) {
+    update(cameraPosition, fpsAdjustment) {
         this.points.rotation.x = Math.PI * this.clock.eighthsFraction / 180;
     }
 

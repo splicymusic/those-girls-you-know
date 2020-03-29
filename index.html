@@ -5,24 +5,33 @@
 
     <title>those GIRLS you.know</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            position: fixed;
-            /*background-color: #000000;*/
-        }
+        /*body, html {*/
+            /*margin: 0;*/
+            /*padding: 0;*/
+            /*position: fixed;*/
+            /*!*background-color: #000000;*!*/
+        /*}*/
 
+        /*canvas {*/
+            /*width: 100%;*/
+            /*height: 100%;*/
+            /*-webkit-touch-callout: none;*/
+            /*-webkit-user-select: none;*/
+            /*-khtml-user-select: none;*/
+            /*-moz-user-select: none;*/
+            /*-ms-user-select: none;*/
+            /*user-select: none;*/
+            /*outline: none;*/
+            /*-webkit-tap-highlight-color: rgba(255, 255, 255, 0); !* mobile webkit *!*/
+        /*}*/
+
+
+
+        body {
+            margin: 0;
+        }
         canvas {
-            width: 100%;
-            height: 100%;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            outline: none;
-            -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+            display: block;
         }
 
     </style>
@@ -41,6 +50,8 @@
     import Stars from "./js/actors/Stars.js";
     import Buildings from "./js/actors/Buildings.js";
     import Cutouts from "./js/actors/Cutouts.js";
+    import Path from "./js/actors/Path.js";
+    import Sky from "./js/actors/Sky.js";
 
     // stats to optimize performance
     let stats = new Stats();
@@ -53,7 +64,7 @@
     let isPlaying = false;
 
     // tracking where we are in the song
-    let clock = new Clock(0, 0, 0);
+    let clock = new Clock(0, 2, 0);
 
     // Renderers
     let rendererThree;
@@ -65,112 +76,70 @@
     // groups of actors
     let actors = [];
 
+    // user input
     let turningLeft = false;
     let turningRight = false;
-    let goingUp = false;
-    let goingDown = false;
+    let lookingUp = false;
+    let lookingDown = false;
+
+    // adjusting for FPS
+    let frameCount = 0;
+    let frameTimes = [];
+    let fpsAdjustment = 1;
 
     // load in images, initialize 3D scene
     let girlLoader = new GirlLoader(init);
 
-    // load images
-    // load music
-    // init
-
 
     function init() {
-        let canvas = document.getElementById("screen");
-        rendererThree = new THREE.WebGLRenderer({
-            canvas: canvas
-        });
-
-        setup3d();
-
-        document.addEventListener('keydown', onDocumentKeyDown, false);
-        document.addEventListener('keyup', onDocumentKeyUp, false);
-        document.addEventListener('mouseup', mouseUp, false);
-        document.addEventListener('touchstart', touchStart, {passive: false});
-
-        // starting our clock, defining start position in animation
-        clock.start();
-    }
-
-
-    function setup3d() {
-        scene = new THREE.Scene();
-
-
         rendererThree = new THREE.WebGLRenderer();
-
-        scene.background = new THREE.Color(0x85C1E9); //#85C1E9
-        scene.fog = new THREE.FogExp2('white', 0.05);
-        scene.color = 0xFFFFFF;
-
+        rendererThree.antialias = true;
         rendererThree.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(rendererThree.domElement);
 
-
-        // floor
-        let floorMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFFCCDD,
-            roughness: 1,
-            flatShading: true
-        });
-        let floorGeometry = new THREE.PlaneGeometry(1000, 3);
-        let plane = new THREE.Mesh(floorGeometry, floorMaterial);
-        // plane.position.x += 1000 / 2;
-        // plane.position.y += 1000 / 2;
-        // plane.position.x = Utils.locationInSong(1, 0, 0) + 1000 / 2;
-        plane.position.z = -2;
-        scene.add(plane);
+        scene = new THREE.Scene();
 
         // light
         let dirLight;
         dirLight = new THREE.DirectionalLight(0xFFFFFF);
-        // dirLight = new THREE.PointLight( 0xffffff, 1, 0 );
         dirLight.position.set(-2, 5, 3).normalize();
-        // dirLight.position.set(20, 0, 100);
         dirLight.rotation.x = Math.PI / 4;
-        // dirLight.castShadow = true;
-        // dirLight.shadowDarkness = 0.5;
         scene.add(dirLight);
-
         let light = new THREE.AmbientLight(0xFFFFFF); // soft white light
         scene.add(light);
 
         camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 50);
-        camera.position.z = .3;
+        camera.position.z = 0;
         camera.position.x = 0;
         camera.position.y = 0;
         camera.rotation.x = 90 * Math.PI / 180;
         camera.rotation.y = -90 * Math.PI / 180;
         camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
 
-
-        addTitle(scene);
-
+        // addTitle(scene);
+        actors.push(new Sky(scene, clock, girlLoader));
         actors.push(new Tunnel(scene, clock, girlLoader));
         actors.push(new Stars(scene, clock, girlLoader));
         actors.push(new Buildings(scene, clock, girlLoader));
         actors.push(new Cutouts(scene, clock, girlLoader));
+        actors.push(new Path(scene, clock, girlLoader));
 
-
+        document.addEventListener('keydown', onDocumentKeyDown, false);
+        document.addEventListener('keyup', onDocumentKeyUp, false);
+        document.addEventListener('mouseup', mouseUp, false);
+        document.addEventListener('touchstart', touchStart, {passive: false});
+        window.addEventListener('resize', resize, false);
     }
+
+
 
     function animate() {
         stats.begin();
-
-        // keep track of where we are in the song
         clock.update();
-
         updateCamera();
-
-        actors.forEach(group => {
-            group.update(camera.position);
-        });
-
+        actors.forEach(group => {group.update(camera.position.x, fpsAdjustment);});
         rendererThree.render(scene, camera);
-
+        calculateFps();
         stats.end();
         requestAnimationFrame(animate);
     }
@@ -200,11 +169,11 @@
 
     function updateCamera() {
         // strut
-        camera.position.x = clock.eighthsFraction * 1 + Math.cos(clock.eighthsFraction * Math.PI) * 0.15;
+        camera.position.x = clock.eighthsFraction * 1;
+        // camera.position.x = clock.eighthsFraction * 4 + Math.cos(clock.eighthsFraction * Math.PI) * 0.25;
 
         // bounce
         camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
-
 
         if (turningLeft) {
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI / 180);
@@ -212,12 +181,12 @@
         if (turningRight) {
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180);
         }
-        if (goingUp) {
-            camera.position.z += .2;
-        }
-        if (goingDown) {
-            camera.position.z -= .2;
-        }
+        // if (lookingUp) {
+        //     camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180);
+        // }
+        // if (lookingDown) {
+        //     camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 180);
+        // }
     }
 
 
@@ -229,7 +198,10 @@
             those_girls_you_know.play();
             // when music loaded, animate
             isPlaying = true;
+            clock.start();
             animate();
+            // starting our clock, defining start position in animation
+
             // };
         }
     }
@@ -237,22 +209,15 @@
 
     function onDocumentKeyDown(event) {
         play();
-
         let keyCode = event["which"];
-        if (keyCode === 37) {
-            turningLeft = true;
-        } else if (keyCode === 39) {
-            turningRight = true;
-        }
-
         if (keyCode === 37 || keyCode === 65) {
             turningLeft = true;
         } else if (keyCode === 38 || keyCode === 87) {
-            goingUp = true;
+            lookingUp = true;
         } else if (keyCode === 39 || keyCode === 68) {
             turningRight = true;
         } else if (keyCode === 40 || keyCode === 83) {
-            goingDown = true;
+            lookingDown = true;
         }
     }
 
@@ -261,11 +226,11 @@
         if (keyCode === 37 || keyCode === 65) {
             turningLeft = false;
         } else if (keyCode === 38 || keyCode === 87) {
-            goingUp = false;
+            lookingUp = false;
         } else if (keyCode === 39 || keyCode === 68) {
             turningRight = false;
         } else if (keyCode === 40 || keyCode === 83) {
-            goingDown = false;
+            lookingDown = false;
         }
     }
 
@@ -277,52 +242,29 @@
         play();
     }
 
+    function resize() {
+        camera.aspect = game.width / game.height;
+        camera.updateProjectionMatrix();
+        rendererThree.setSize(game.width, game.height);
+    }
+
+    function calculateFps() {
+        frameCount++;
+        if (frameCount < 10) {
+            frameTimes.push((new Date()).getTime());
+        } else {
+            let frameIndex = frameCount % 10;
+            let now = (new Date()).getTime();
+            let then = frameTimes[frameIndex];
+            frameTimes[frameIndex] = now;
+            let fps = 10.0 / ((now - then) / 1000);
+            if (fps > 1) {
+                fpsAdjustment = 60 / fps;
+            }
+        }
+    }
 
 
 </script>
-<canvas id="screen">
-    <h1>THOSE GIRLS YOU KNOWT</h1>
-
-    <p>
-        Those girls you know<br>
-        Looking at the lenses of their phone<br>
-        Minimize their blemishes<br>
-        With downward angles<br>
-        And tag<br>
-        Their thoughts
-    </p>
-
-    <p>
-        Now when you are<br>
-        Following the mentions of a star<br>
-        Their catchy, sassy, cutesy captions<br>
-        Are designed to win<br>
-        Your heart
-    </p>
-
-    <p>
-        Underneath their makeup<br>
-        Branding with their clothes<br>
-        Underneath their makeup are those GIRLS
-    </p>
-
-    <p>
-        Underneath your make up<br>
-        Practicing your pose<br>
-        Underneath your make up are those...
-    </p>
-
-    <p>
-        ...Girls you know<br>
-        Looking at the lenses of your phone<br>
-        Minimize your blemishes<br>
-        With downward angles<br>
-        And tag<br>
-        your thoughts
-
-    </p>
-
-</canvas>
-
 </body>
 </html>

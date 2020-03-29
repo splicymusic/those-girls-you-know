@@ -11,6 +11,7 @@ class Clock {
         this.startMillis = Math.round(this.startSeconds * 1000);
         this.seconds = this.startSeconds;
         this.millis = this.startMillis;
+        this.frame = 0;
     }
 
     start() {
@@ -19,6 +20,7 @@ class Clock {
 
     update() {
         let now = Date.now();
+        this.frame ++;
         // where we are in the song
         this.seconds = (now - this.start) / 1000 + this.startSeconds;
         this.millis = (now - this.start) + this.startMillis;

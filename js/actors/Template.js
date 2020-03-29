@@ -11,7 +11,7 @@ class XXXXXX extends Actor {
 
 
 
-    update(cameraPosition) {
+    update(cameraPosition, fpsAdjustment) {
 
     }
 

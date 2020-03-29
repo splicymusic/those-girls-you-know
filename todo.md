@@ -10,6 +10,8 @@ stars, hearts
 balls bouncing in time
 squares lighting up in time
 
+outher spiral spirals 
+
 
 
 
