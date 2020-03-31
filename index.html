@@ -52,6 +52,7 @@
     import Cutouts from "./js/actors/Cutouts.js";
     import Path from "./js/actors/Path.js";
     import Sky from "./js/actors/Sky.js";
+    import Blockers from "./js/actors/Blockers.js";
 
     // stats to optimize performance
     let stats = new Stats();
@@ -59,12 +60,12 @@
     document.body.appendChild(stats.dom);
 
     // audio
-    let those_girls_you_know = new Audio('music/Those Girls You Know_6.mp3');
+    let those_girls_you_know = new Audio('music/Those Girls You Know.mp3');
     if (those_girls_you_know) those_girls_you_know.loop = false;
     let isPlaying = false;
 
     // tracking where we are in the song
-    let clock = new Clock(0, 2, 0);
+    let clock = new Clock(0, 0, 0);
 
     // Renderers
     let rendererThree;
@@ -113,8 +114,9 @@
         camera.position.x = 0;
         camera.position.y = 0;
         camera.rotation.x = 90 * Math.PI / 180;
-        camera.rotation.y = -90 * Math.PI / 180;
-        camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
+        // camera.rotation.y = -90 * Math.PI / 180;
+        camera.rotation.y = Math.PI / -2;
+        // camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
 
         // addTitle(scene);
         actors.push(new Sky(scene, clock, girlLoader));
@@ -123,6 +125,7 @@
         actors.push(new Buildings(scene, clock, girlLoader));
         actors.push(new Cutouts(scene, clock, girlLoader));
         actors.push(new Path(scene, clock, girlLoader));
+        actors.push(new Blockers(scene, clock, girlLoader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -173,7 +176,12 @@
         // camera.position.x = clock.eighthsFraction * 4 + Math.cos(clock.eighthsFraction * Math.PI) * 0.25;
 
         // bounce
-        camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
+        if (camera.position.x >= Utils.locationInSong(1, 0, 0) && camera.position.x < Utils.locationInSong(0, 48, 0)) {
+            camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
+        }
+
+
+        // camera.rotation.y = (clock.eighthsFraction * Math.PI) / 16;
 
         if (turningLeft) {
             camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI / 180);

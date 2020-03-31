@@ -10,7 +10,7 @@ class Stars extends Actor {
 
         let vertices = [];
 
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < 50000; i++) {
 
             let x = Math.random() * 1000 - 50;
             let y = Math.random() * 100 - 50;

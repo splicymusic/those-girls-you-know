@@ -4,7 +4,7 @@ class Loader {
 
     constructor(callback) {
         this.loader = new THREE.TextureLoader();
-        this.array = [
+        this.imageList = [
 
             "images/girls/Charo/1.jpg",
             "images/girls/Charo/2.jpg",
@@ -29,6 +29,20 @@ class Loader {
             // "images/girls/Candice Bergen/4.jpg",
             // "images/girls/Candice Bergen/5.jpg",
 
+
+
+            "images/makeup/ad1.jpg",
+            "images/makeup/ad2.jpg",
+            "images/makeup/ad3.jpg",
+            "images/makeup/ad4.jpg",
+            "images/makeup/brush.png",
+            "images/makeup/brush2.png",
+            "images/makeup/brush3.png",
+            "images/makeup/lipstic1.png",
+            "images/makeup/lipstic2.png",
+            "images/makeup/mascara1.png",
+            "images/makeup/mascara2.png",
+
             "images/girls/Catherine Bach/main.png",
             "images/girls/Barbi Benton/main.png",
             "images/girls/Charo/charo.png",
@@ -36,8 +50,9 @@ class Loader {
             "images/girls/Carrie Fisher/main.png",
             "images/girls/Diana Ross/1.png",
             "images/girls/Pam Grier/main.png",
+            "images/title card.png",
         ];
-        this.girls = {};
+        this.images = {};
         this.index = 0;
         this.loadGirl(callback);
     }
@@ -48,13 +63,13 @@ class Loader {
     // Probably a good async way to do this, but no time to learn that right now!
     loadGirl(callback) {
 
-        if (this.index < this.array.length) {
-            let path = this.array[this.index];
+        if (this.index < this.imageList.length) {
+            let path = this.imageList[this.index];
             let self = this;
             this.loader.load(path, function(texture) {
                 texture.minFilter = THREE.LinearFilter;
                 console.log("loaded: " + path + " (" + texture.image.width + "x" + texture.image.height + ")");
-                self.girls[path] = texture;
+                self.images[path] = texture;
                 self.loadGirl(callback);
             });
             this.index++;

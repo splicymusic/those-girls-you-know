@@ -1,8 +1,8 @@
 
 class Card {
 
-    constructor(object, end, center) {
-        this.object = object;
+    constructor(picture, end, center) {
+        this.picture = picture;
         this.end = end;
         this.center = center;
     }
