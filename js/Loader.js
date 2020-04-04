@@ -4,7 +4,7 @@ class Loader {
 
     constructor(callback) {
         this.loader = new THREE.TextureLoader();
-        let girls = [
+        let names = [
             "Barbi Benton",
             "Bo Derek",
             "Carrie Fisher",
@@ -22,15 +22,16 @@ class Loader {
             "Stevie Nicks",
             "Susan Dey",
         ];
+        this.names = names;
         let imageList = [];
-        for (let i = 0; i < girls.length; i++) {
-            let girl = girls[i];
+        for (let i = 0; i < names.length; i++) {
+            let girl = names[i];
             for (let j = 1; j <= 4; j++) {
                 imageList.push("images/girls/" + girl + "/" + j + ".jpg");
             }
         }
-        for (let i = 0; i < girls.length; i++) {
-            let girl = girls[i];
+        for (let i = 0; i < names.length; i++) {
+            let girl = names[i];
             imageList.push("images/girls/" + girl + "/main.png")
         }
         imageList.push("images/title card.png");
@@ -52,6 +53,10 @@ class Loader {
         this.images = {};
         this.index = 0;
         this.loadGirl(callback);
+    }
+
+    get(path) {
+        return this.images[path];
     }
 
 
