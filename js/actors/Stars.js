@@ -12,7 +12,7 @@ class Stars extends Actor {
 
         for (let i = 0; i < 50000; i++) {
 
-            let x = Math.random() * 1000 - 50;
+            let x = Math.random() * 1000 + Utils.locationInSong(0, 0, 18);
             let y = Math.random() * 100 - 50;
             let z = Math.random() * 100 - 50;
 
@@ -32,6 +32,7 @@ class Stars extends Actor {
         });
 
         this.points = new THREE.Points(geometry, material);
+        this.points.position.x = Utils.locationInSong(1, 0, 0);
 
         scene.add(this.points);
     }

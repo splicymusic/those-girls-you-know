@@ -4,34 +4,39 @@ class Loader {
 
     constructor(callback) {
         this.loader = new THREE.TextureLoader();
-        this.imageList = [
-
-            "images/girls/Charo/1.jpg",
-            "images/girls/Charo/2.jpg",
-            "images/girls/Charo/3.jpg",
-            "images/girls/Charo/4.jpg",
-            // "images/girls/Bo Derek/Bo Derek.jpg",
-            "images/girls/Barbi Benton/1.jpg",
-            "images/girls/Barbi Benton/2.jpg",
-            "images/girls/Barbi Benton/3.jpg",
-            // "images/girls/Barbi Benton/4.jpg",
-            "images/girls/Barbi Benton/5.jpg",
-
-            "images/girls/Catherine Bach/1.jpg",
-            "images/girls/Catherine Bach/2.jpg",
-            "images/girls/Catherine Bach/3.jpg",
-            "images/girls/Catherine Bach/4.png",
-
-            // "images/girls/Catherine Bach/5.jpg",
-            // "images/girls/Candice Bergen/1.jpg",
-            // "images/girls/Candice Bergen/2.jpg",
-            // "images/girls/Candice Bergen/3.jpg",
-            // "images/girls/Candice Bergen/4.jpg",
-            // "images/girls/Candice Bergen/5.jpg",
-
-
-
-            "images/makeup/ad1.jpg",
+        let girls = [
+            "Barbi Benton",
+            "Bo Derek",
+            "Carrie Fisher",
+            "Catherine Bach",
+            "Charo",
+            "Debbie Harry",
+            "Diana Ross",
+            "Faye Dunaway",
+            "Jayne Kennedy",
+            "Lynda Carter",
+            "Michelle Pfeiffer",
+            "Pam Grier",
+            "Raquel Welch",
+            "Sally Field",
+            "Stevie Nicks",
+            "Susan Dey",
+        ];
+        let imageList = [];
+        for (let i = 0; i < girls.length; i++) {
+            let girl = girls[i];
+            for (let j = 1; j <= 4; j++) {
+                imageList.push("images/girls/" + girl + "/" + j + ".jpg");
+            }
+        }
+        for (let i = 0; i < girls.length; i++) {
+            let girl = girls[i];
+            imageList.push("images/girls/" + girl + "/main.png")
+        }
+        imageList.push("images/title card.png");
+        this.imageList = imageList;
+        /*
+        "images/makeup/ad1.jpg",
             "images/makeup/ad2.jpg",
             "images/makeup/ad3.jpg",
             "images/makeup/ad4.jpg",
@@ -42,16 +47,8 @@ class Loader {
             "images/makeup/lipstic2.png",
             "images/makeup/mascara1.png",
             "images/makeup/mascara2.png",
+         */
 
-            "images/girls/Catherine Bach/main.png",
-            "images/girls/Barbi Benton/main.png",
-            "images/girls/Charo/charo.png",
-            "images/girls/Stevie Nicks/main.png",
-            "images/girls/Carrie Fisher/main.png",
-            "images/girls/Diana Ross/1.png",
-            "images/girls/Pam Grier/main.png",
-            "images/title card.png",
-        ];
         this.images = {};
         this.index = 0;
         this.loadGirl(callback);

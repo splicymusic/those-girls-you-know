@@ -22,7 +22,8 @@ class Path extends Actor {
         let path = new THREE.Mesh(pedestalGeometry, floorMaterial);
         path.position.x = Utils.locationInSong(0 , 4, 0) + length / 2;
         path.position.z = -2 - (height / 2);
-        this.plane = path;
+        path.visible = false;
+        this.path = path;
 
         let baseGeometry = new THREE.BoxGeometry(length, 10, height);
         let base = new THREE.Mesh(baseGeometry, floorMaterial);
@@ -37,9 +38,10 @@ class Path extends Actor {
 
 
     update(cameraPosition, fpsAdjustment) {
-        // if (cameraPosition >= Utils.locationInSong(0, 40, 0)) {
-        //     this.plane.material.color = new THREE.Color('black');
-        // }
+        if (cameraPosition >= Utils.locationInSong(1, 0, 0) - .1) {
+            this.path.visible = true;
+            //this.plane.material.color = new THREE.Color('black');
+        }
     }
 
 }

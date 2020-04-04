@@ -10,18 +10,34 @@ class Cutouts extends Actor {
 
         let cutouts = [
             "images/title card.png",
-            "images/girls/Barbi Benton/main.png",
-            "images/girls/Charo/charo.png",
-            "images/girls/Pam Grier/main.png",
-            "images/girls/Catherine Bach/main.png",
-            "images/girls/Stevie Nicks/main.png",
-            "images/girls/Carrie Fisher/main.png",
-            "images/girls/Diana Ross/1.png",
+            ];
+
+        let girls = [
+            "Barbi Benton",
+            "Bo Derek",
+            "Carrie Fisher",
+            "Catherine Bach",
+            "Charo",
+            "Debbie Harry",
+            "Diana Ross",
+            "Faye Dunaway",
+            "Jayne Kennedy",
+            "Lynda Carter",
+            "Michelle Pfeiffer",
+            "Pam Grier",
+            "Raquel Welch",
+            "Sally Field",
+            "Stevie Nicks",
+            "Susan Dey",
         ];
+        for (let i = 0; i < girls.length; i++) {
+            let girl = girls[i];
+                cutouts.push("images/girls/" + girl + "/main.png");
+        }
 
         let scale = 4;
 
-        for (let i = 0; i < 23; i++) {
+        for (let i = 0; i < 18; i++) {
             let texture = loader.images[cutouts[i % cutouts.length]];
             let material = new THREE.MeshLambertMaterial({
                 map: texture,
@@ -30,6 +46,7 @@ class Cutouts extends Actor {
                 transparent: true
             });
             // preserve ratio
+            console.log(cutouts[i % cutouts.length]);
             let geometry = new THREE.PlaneGeometry(scale * texture.image.width / texture.image.height, scale);
             let mesh = new THREE.Mesh(geometry, material);
             // let loc = Utils.locationInSong(1, 0, i );

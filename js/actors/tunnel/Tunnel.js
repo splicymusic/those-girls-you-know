@@ -10,8 +10,8 @@ class Tunnel extends Actor {
         this.innerCards = [];
         this.outerCards = [];
 
-        this.createSpiral(this.innerCards, 5, Utils.locationInSong(1, 0, 0), 2, 0);
-        // this.createSpiral(this.outerCards, 9, Utils.locationInSong(1, 0, 2), 3, 2);
+        this.createSpiral(this.innerCards, 5, Utils.locationInSong(1, 0, 6), 2, 0);
+        this.createSpiral(this.outerCards, 9, Utils.locationInSong(1, 0, 8), 3, 0);
 
         // this.createSpiral(this.inner, 5, Utils.locationInSong(1, 0, 0), 3, 0);
         // this.createSpiral(this.outer, 3, Utils.locationInSong(1, 0, 2), 1, 2);
@@ -27,7 +27,7 @@ class Tunnel extends Actor {
         //     fog: true,
         // });
 
-        for (let i = 0; i < 90; i++) {
+        for (let i = 0; i < 88; i++) {
             let sideColor = new THREE.Color("hsl(" + (i * 10) % 256 + ", 100%, 50%)");
 
             let edgeMaterial = new THREE.MeshBasicMaterial({
@@ -77,6 +77,9 @@ class Tunnel extends Actor {
         this.outerCards.forEach(card => {
             // card.end.position.z = Math.sin((card.end.position.x + this.clock.eighthsFraction) * Math.PI / 4) * 2 + 9;
             // card.center.position.x = -2 * this.clock.eighthsFraction;
+            if (cameraPosition >= Utils.locationInSong(1, 0, 0) - 0.1) {
+                card.picture.visible = true;
+            }
         });
         let effectIndex = this.clock.bar % 4;
         // if (this.clock.eighthsFraction >= 32.5) {
