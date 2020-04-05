@@ -10,5 +10,5 @@ export function locationInSong(sections, bars, eighths) {
 
 
 export function randomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+    return Math.floor(Math.random() * max);
 }

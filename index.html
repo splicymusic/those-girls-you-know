@@ -1,31 +1,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-
-    <title>those GIRLS you.know</title>
+    <title>SPLICY - Those GIRLS you.know</title>
     <style>
-        /*body, html {*/
-            /*margin: 0;*/
-            /*padding: 0;*/
-            /*position: fixed;*/
-            /*!*background-color: #000000;*!*/
-        /*}*/
-
-        /*canvas {*/
-            /*width: 100%;*/
-            /*height: 100%;*/
-            /*-webkit-touch-callout: none;*/
-            /*-webkit-user-select: none;*/
-            /*-khtml-user-select: none;*/
-            /*-moz-user-select: none;*/
-            /*-ms-user-select: none;*/
-            /*user-select: none;*/
-            /*outline: none;*/
-            /*-webkit-tap-highlight-color: rgba(255, 255, 255, 0); !* mobile webkit *!*/
-        /*}*/
-
-
 
         body {
             margin: 0;
@@ -53,6 +30,11 @@
     import Path from "./js/actors/Path.js";
     import Sky from "./js/actors/Sky.js";
     import Blockers from "./js/actors/Blockers.js";
+    import Swimmers from "./js/actors/Swimmers.js";
+    import Rainbow from "./js/actors/Rainbow.js";
+
+    // tracking where we are in the song
+    let clock = new Clock(0, 0, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -63,9 +45,6 @@
     let those_girls_you_know = new Audio('music/Those Girls You Know.mp3');
     if (those_girls_you_know) those_girls_you_know.loop = false;
     let isPlaying = false;
-
-    // tracking where we are in the song
-    let clock = new Clock(0, 0, 0);
 
     // Renderers
     let rendererThree;
@@ -120,12 +99,15 @@
 
         // addTitle(scene);
         actors.push(new Sky(scene, clock, girlLoader));
-        actors.push(new Tunnel(scene, clock, girlLoader));
+        actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(1, 0, 0)));
+        actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(0, 40, 0)));
         actors.push(new Stars(scene, clock, girlLoader));
         actors.push(new Buildings(scene, clock, girlLoader));
         actors.push(new Cutouts(scene, clock, girlLoader));
         actors.push(new Path(scene, clock, girlLoader));
         actors.push(new Blockers(scene, clock, girlLoader));
+        actors.push(new Swimmers(scene, clock, girlLoader));
+        actors.push(new Rainbow(scene, clock, girlLoader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -216,9 +198,10 @@
 
 
     function onDocumentKeyDown(event) {
-        play();
         let keyCode = event["which"];
-        if (keyCode === 37 || keyCode === 65) {
+        if (keyCode === 32) {
+            play();
+        } else if (keyCode === 37 || keyCode === 65) {
             turningLeft = true;
         } else if (keyCode === 38 || keyCode === 87) {
             lookingUp = true;
@@ -251,9 +234,9 @@
     }
 
     function resize() {
-        camera.aspect = game.width / game.height;
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        rendererThree.setSize(game.width, game.height);
+        rendererThree.setSize( window.innerWidth, window.innerHeight );
     }
 
     function calculateFps() {

@@ -19,7 +19,7 @@ class Sky extends Actor {
         this.colors = [];
         this.darks = [];
         this.fogs = [];
-        let maxColors = 255;
+        let maxColors = 256;
         for (let i = 0; i < maxColors; i++) {
             let hue = Math.floor(i / maxColors * 255);
             let color = new THREE.Color("hsl(" + hue + ", 100%, 70%)");
@@ -30,7 +30,6 @@ class Sky extends Actor {
         }
         scene.color = 0xFFFFFF;
 
-        this.isStrobing = false;
     }
 
 
@@ -43,8 +42,8 @@ class Sky extends Actor {
         }
 
         // solo
-        if (cameraPosition >= Utils.locationInSong(0, 26, 0)) {
-            this.scene.background = this.white;
+        if (cameraPosition >= Utils.locationInSong(0, 26, 0) - 0.1) {
+            this.scene.background = this.skyBlue;
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
@@ -110,7 +109,9 @@ class Sky extends Actor {
         } else {
             transform = Math.cos(this.clock.quarterFraction * Math.PI * 2);
         }
-        return Math.round((transform + 1) / rate * this.colors.length);
+        let index = Math.round((transform + 1) / rate * this.colors.length);
+        let max = this.colors.length - 1;
+        return Math.min(index, max);
     }
 
     // getColor(isSin) {
