@@ -15,7 +15,7 @@ class Loader {
             "Faye Dunaway",
             "Jayne Kennedy",
             "Lynda Carter",
-            "Michelle Pfeiffer",
+            "Dolly Parton",
             "Pam Grier",
             "Raquel Welch",
             "Sally Field",
@@ -35,9 +35,9 @@ class Loader {
             imageList.push("images/girls/" + girl + "/main.png")
         }
         imageList.push("images/title card.png");
-        this.imageList = imageList;
-        /*
-        "images/makeup/ad1.jpg",
+
+        this.makeup = [
+            "images/makeup/ad1.jpg",
             "images/makeup/ad2.jpg",
             "images/makeup/ad3.jpg",
             "images/makeup/ad4.jpg",
@@ -47,8 +47,16 @@ class Loader {
             "images/makeup/lipstic1.png",
             "images/makeup/lipstic2.png",
             "images/makeup/mascara1.png",
-            "images/makeup/mascara2.png",
-         */
+            "images/makeup/mascara2.png"
+        ];
+
+        imageList.concat(this.makeup);
+        imageList.push("images/rainbow.png");
+        this.imageList = imageList;
+
+
+
+
 
         this.images = {};
         this.index = 0;
@@ -57,6 +65,24 @@ class Loader {
 
     get(path) {
         return this.images[path];
+    }
+
+    getPlane(path, scale) {
+        let texture = this.get(path);
+        let material = new THREE.MeshLambertMaterial({
+            map: texture,
+            fog: true,
+            side: THREE.DoubleSide,
+            transparent: true
+        });
+        // preserve ratio
+        let geometry = new THREE.PlaneGeometry(scale * texture.image.width / texture.image.height, scale);
+        let mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.y = -Math.PI / 2;
+        mesh.rotation.x = Math.PI / 2;
+        mesh.receiveShadow = false;
+        mesh.castShadow = false;
+        return mesh;
     }
 
 

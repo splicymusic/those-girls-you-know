@@ -29,3 +29,5 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 ## Influences
 * MGMT - Time to Pretend
 * White Stripes - Seven Nation Army
+
+SPLICY - Those Girls You know [70s ICONS]
