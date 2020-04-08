@@ -49,18 +49,57 @@ class Loader {
             "images/makeup/mascara1.png",
             "images/makeup/mascara2.png"
         ];
+        imageList = imageList.concat(this.makeup);
 
-        imageList.concat(this.makeup);
+        this.emojis = [
+            "images/emoji/beating-heart.png",
+            "images/emoji/blue-heart.png",
+            "images/emoji/butterfly.png",
+            "images/emoji/cloud.png",
+            "images/emoji/daffodil.png",
+            "images/emoji/growing-heart.png",
+            "images/emoji/heart-eyes.png",
+            "images/emoji/high-heel.png",
+            "images/emoji/kiss.png",
+            "images/emoji/lips.png",
+            "images/emoji/orange-heart.png",
+            "images/emoji/pink-bow.png",
+            "images/emoji/pink-flower.png",
+            "images/emoji/purple-heart.png",
+            "images/emoji/rocket.png",
+            "images/emoji/sparkle-heart.png",
+            "images/emoji/star.png",
+            "images/emoji/sun.png",
+            "images/emoji/ufo.png"
+        ];
+        imageList = imageList.concat(this.emojis);
+
+        this.happyEmoji = [
+            "images/emoji/beating-heart.png",
+            "images/emoji/blue-heart.png",
+            "images/emoji/butterfly.png",
+            "images/emoji/daffodil.png",
+            "images/emoji/growing-heart.png",
+            "images/emoji/heart-eyes.png",
+            "images/emoji/kiss.png",
+            "images/emoji/lips.png",
+            "images/emoji/orange-heart.png",
+            "images/emoji/pink-bow.png",
+            "images/emoji/pink-flower.png",
+            "images/emoji/purple-heart.png",
+            "images/emoji/sparkle-heart.png",
+            "images/emoji/star.png",
+            "images/emoji/sun.png"
+        ];
+
         imageList.push("images/rainbow.png");
+        imageList.push("images/blank.png");
         this.imageList = imageList;
-
-
-
 
 
         this.images = {};
         this.index = 0;
-        this.loadGirl(callback);
+        this.loadImage(callback);
     }
 
     get(path) {
@@ -89,7 +128,7 @@ class Loader {
     // loads an image then calls itself.
     // if no more images to load, callback is called.
     // Probably a good async way to do this, but no time to learn that right now!
-    loadGirl(callback) {
+    loadImage(callback) {
 
         if (this.index < this.imageList.length) {
             let path = this.imageList[this.index];
@@ -98,7 +137,7 @@ class Loader {
                 texture.minFilter = THREE.LinearFilter;
                 console.log("loaded: " + path + " (" + texture.image.width + "x" + texture.image.height + ")");
                 self.images[path] = texture;
-                self.loadGirl(callback);
+                self.loadImage(callback);
             });
             this.index++;
         } else {

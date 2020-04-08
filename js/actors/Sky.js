@@ -15,7 +15,7 @@ class Sky extends Actor {
         this.white = new THREE.Color('white');
 
         this.scene.background = this.skyBlue;
-        this.scene.fog = new THREE.FogExp2('white', 0.05);
+        this.scene.fog = new THREE.FogExp2('black', 0.05);
         this.colors = [];
         this.darks = [];
         this.fogs = [];

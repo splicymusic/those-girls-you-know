@@ -3,22 +3,24 @@
 
 * a spiral ring of these pedestals ascending and descending
 
-sun, clouds rainbows
+sun, clouds
 fireworks, confetti
 stars, hearts
 
-balls bouncing in time
 squares lighting up in time
 
+## three js performance
+* audio loader: https://threejs.org/docs/#api/en/loaders/AudioLoader
+* load progress monitor
 
 
-Accounts:
+## Accounts
 * Youtube: CHECK
 * ReverbNation: CHECK
 * SoundCloud
 * Instagram
 * Twitter
-* Facebook
+* Facebook (for the olds who still use it)
 
 
 ## Ideas
@@ -30,4 +32,6 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 * MGMT - Time to Pretend
 * White Stripes - Seven Nation Army
 
+## description
 SPLICY - Those Girls You know [70s ICONS]
+A celebration of the iconic women of the 1970s.

@@ -18,7 +18,7 @@ class Buildings extends Actor {
         let leftBound = -canyonWidth;
         let rightBound = canyonWidth;
         for (let i = 0; i < 500; i++) {
-            let cubeX = Utils.randomInt(arenaSize) - arenaSize;
+            let cubeX = Utils.randomInt(arenaSize) + Utils.locationInSong(0,4,0);
             let cubeY = Utils.randomInt(arenaSize) - arenaSize / 2;
             if (cubeY > leftBound && cubeY < rightBound) continue;
             let geometry = new THREE.BoxGeometry(1, 1, Utils.randomInt(15) + 5);

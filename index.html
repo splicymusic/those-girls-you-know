@@ -32,9 +32,11 @@
     import Blockers from "./js/actors/Blockers.js";
     import Swimmers from "./js/actors/Swimmers.js";
     import Rainbow from "./js/actors/Rainbow.js";
+    import Clouds from "./js/actors/Clouds.js";
+    import Sheet from "./js/actors/Sheet.js";
 
     // tracking where we are in the song
-    let clock = new Clock(0, 0, 0);
+    let clock = new Clock(0, 39, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -102,12 +104,14 @@
         actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(1, 0, 0)));
         actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(0, 40, 0)));
         actors.push(new Stars(scene, clock, girlLoader));
-        actors.push(new Buildings(scene, clock, girlLoader));
+        // actors.push(new Buildings(scene, clock, girlLoader));
         actors.push(new Cutouts(scene, clock, girlLoader));
         actors.push(new Path(scene, clock, girlLoader));
         actors.push(new Blockers(scene, clock, girlLoader));
         actors.push(new Swimmers(scene, clock, girlLoader));
         actors.push(new Rainbow(scene, clock, girlLoader));
+        actors.push(new Clouds(scene, clock, girlLoader));
+        actors.push(new Sheet(scene, clock, girlLoader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);

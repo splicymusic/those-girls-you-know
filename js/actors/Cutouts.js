@@ -19,6 +19,7 @@ class Cutouts extends Actor {
         }
 
         paths.push("images/title card.png");
+        // paths.push("images/blank.png");
         for (let i = 0; i < loader.names.length; i++) {
             let girl = loader.names[i];
             paths.push("images/girls/" + girl + "/main.png");

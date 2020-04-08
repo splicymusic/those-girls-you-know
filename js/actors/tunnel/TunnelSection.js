@@ -8,16 +8,27 @@ class TunnelSection extends Actor {
 
     constructor(scene, clock, loader, girl, xPos) {
         super(scene, clock, loader);
-        let cardImages = [];
+
+        let girlImages = [];
         for (let j = 1; j <= 4; j++) {
             let image = loader.get("images/girls/" + girl + "/" + j + ".jpg");
+            girlImages.push(image);
+        }
+        this.girlImages = girlImages;
+
+        let cardImages = [];
+        let cardPaths = [];
+        for (let j = 1; j <= 4; j++) {
+            let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
+            cardPaths.push(imagePath);
+            let image = loader.get(imagePath);
             cardImages.push(image);
         }
         let mainImage = loader.get("images/girls/" + girl + "/main.png");
+        this.emojiPaths = cardPaths;
+        this.emojiImages = cardImages;
 
-        this.girl = girl;
-        this.xPos = xPos;
-        this.cardImages = cardImages;
+
         this.mainImage = mainImage;
         this.innerCards = [];
         this.outerCards = [];
@@ -25,11 +36,11 @@ class TunnelSection extends Actor {
 
         this.sideColor = new THREE.Color("hsl(" + Utils.randomInt(255) + ", 100%, 50%)");
 
-        this.innerSpine = this.createSpiral(this.innerCards, 5, xPos, 2, 0);
-        this.outerSpine = this.createSpiral(this.outerCards, 9, xPos + Utils.locationInSong(0, 0, 2), 3, 0);
+        this.innerSpine = this.createSpiral(this.innerCards, 5, xPos, 2, 0, true);
+        this.outerSpine = this.createSpiral(this.outerCards, 9, xPos + Utils.locationInSong(0, 0, 2), 3, 0, true);
     }
 
-    createSpiral(cards, radius, startX, scale, offset) {
+    createSpiral(cards, radius, startX, scale, offset, isEmoji) {
 
         let edgeMaterial = new THREE.MeshBasicMaterial({
             color: this.sideColor, // top
@@ -39,7 +50,7 @@ class TunnelSection extends Actor {
         let spine = new THREE.Group();
         for (let i = 0; i < 4; i++) {
 
-            let textureA = this.cardImages[(i + offset) % 4];
+            let textureA = this.girlImages[(i + offset) % 4];
             let geometryA = new THREE.BoxBufferGeometry(.1, scale, scale * textureA.image.width / textureA.image.height);
             let cardMaterialA = [
                 new THREE.MeshBasicMaterial({
@@ -61,9 +72,13 @@ class TunnelSection extends Actor {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let center = new THREE.Group();
                 let end = new THREE.Group();
-                let picture = new THREE.Mesh(geometryA, cardMaterialA);
-                picture.rotation.x = Math.PI / 2;
-                // picture.visible = false;
+                let picture;
+                if (isEmoji) {
+                    picture = this.loader.getPlane(this.emojiPaths[(i + offset) % 4], 2);
+                } else {
+                    picture = new THREE.Mesh(geometryA, cardMaterialA);
+                    picture.rotation.x = Math.PI / 2;
+                }
                 end.add(picture);
                 end.position.set(i * 4 + startX + j * .25, 0, radius);
                 center.add(end);
@@ -100,21 +115,25 @@ class TunnelSection extends Actor {
             //     card.picture.visible = true;
             // }
             // if (this.clock.quarter > 64 + 16) {
-            if (effectIndex === 0) {
-                card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
-            }
-            if (effectIndex === 1) {
-                card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180 * fpsAdjustment);
-                // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-            }
-            if (effectIndex === 2) {
-                card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
-                // mesh.rotateZ(0.1);
-            }
-            if (effectIndex === 3) {
-                card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 1), -1 * Math.PI / 180 * fpsAdjustment);
-                // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-            }
+
+
+            card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
+
+            // if (effectIndex === 0) {
+            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
+            // }
+            // if (effectIndex === 1) {
+            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180 * fpsAdjustment);
+            //     // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
+            // }
+            // if (effectIndex === 2) {
+            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
+            //     // mesh.rotateZ(0.1);
+            // }
+            // if (effectIndex === 3) {
+            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 1), -1 * Math.PI / 180 * fpsAdjustment);
+            //     // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
+            // }
 
             // mesh.position.x -= .1;
         });
