@@ -22,10 +22,11 @@ class Swimmers extends Actor {
             let scale = 4;
             let cutout = loader.getPlane(path, scale);
             let crowdDepth = Utils.locationInSong(2, 0, 0);
-            let loc = Utils.locationInSong(0, 42, 0) - crowdDepth;
+            let loc = Utils.locationInSong(0, 39, 0) - crowdDepth;
             let xPos = loc +  Utils.randomInt(crowdDepth) + Math.random() * .2;
             let yPos =  Utils.randomInt(48) - 24;
-            let zPos = -1 * Utils.randomInt(Math.abs(yPos)) + 0.25 * Math.abs(yPos) - 1.5;
+            //let zPos = -1 * Utils.randomInt(Math.abs(yPos)) + 0.25 * Math.abs(yPos) - 1.5;
+            let zPos = Math.sin((yPos) * Math.PI / 4)- 4;
             // let zPos = 0;
             if (Math.abs(yPos) < 3) continue;
             cutout.position.set(xPos,yPos, zPos);
@@ -41,40 +42,28 @@ class Swimmers extends Actor {
 
 
     update(cameraPosition, fpsAdjustment) {
-        if (cameraPosition > Utils.locationInSong(0, 40, 0)) {
-            // this.group.visible = true;
-            this.group.position.x += 0.095 * fpsAdjustment;
-        }
+        let a = Utils.locationInSong(0, 39, 0);
+        let b = Utils.locationInSong(0, 40, 0) - 0.1;
+        let c = Utils.locationInSong(0, 44, 0) - 0.1;
+        let d = Utils.locationInSong(0, 46, 0) - 0.1;
+        let e = Utils.locationInSong(0, 48, 0) - 0.1;
 
-        if (cameraPosition >= Utils.locationInSong(0, 41, 0)) {
-            this.group.position.x -= 0.095 * fpsAdjustment;
-        }
-
-        if (cameraPosition >= Utils.locationInSong(0, 42, 0)) {
+        if (cameraPosition >= a && cameraPosition < b) {
             this.group.visible = true;
-            this.group.position.x += 0.095 * fpsAdjustment;
-            this.group.position.x += 0.02 * fpsAdjustment;
+            this.group.position.x += 0.3 * fpsAdjustment;
+        }
+        if (cameraPosition >= b && cameraPosition < e) {
+            this.group.position.x = Utils.locationInSong(0, 10, 0);
+            this.cutouts.forEach(cutout => {
+                cutout.position.z = Math.sin((cutout.position.y + this.clock.eighthsFraction) * Math.PI / 4) * 1 - 4;
+            });
+
         }
 
-        if (cameraPosition >= Utils.locationInSong(0, 43, 0)) {
-            this.group.position.x -= 0.095 * fpsAdjustment;
-        }
-
-        if (cameraPosition >= Utils.locationInSong(0, 44, 0)) {
+        if (cameraPosition > e) {
             this.group.visible = false;
         }
 
-
-
-        if (cameraPosition >= Utils.locationInSong(0, 46, 0)) {
-            this.group.visible = true;
-            this.group.position.x += 0.02 * fpsAdjustment;
-        }
-
-
-        if (cameraPosition >= Utils.locationInSong(0, 48, 0)) {
-            this.group.visible = false;
-        }
 
 
         this.cutouts.forEach(cutout => {

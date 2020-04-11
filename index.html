@@ -34,9 +34,10 @@
     import Rainbow from "./js/actors/Rainbow.js";
     import Clouds from "./js/actors/Clouds.js";
     import Sheet from "./js/actors/Sheet.js";
+    import Fireworks from "./js/actors/fireworks/Fireworks.js";
 
     // tracking where we are in the song
-    let clock = new Clock(0, 20, 0);
+    let clock = new Clock(0, 39, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -112,6 +113,7 @@
         actors.push(new Rainbow(scene, clock, girlLoader));
         actors.push(new Clouds(scene, clock, girlLoader));
         // actors.push(new Sheet(scene, clock, girlLoader));
+        actors.push(new Fireworks(scene, clock, girlLoader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -165,9 +167,6 @@
         if (camera.position.x >= Utils.locationInSong(1, 0, 0) && camera.position.x < Utils.locationInSong(0, 48, 0)) {
             camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
         }
-
-
-        console.log(camera.rotation.z);
 
         // camera.rotation.y = (clock.eighthsFraction * Math.PI) / 16;
 

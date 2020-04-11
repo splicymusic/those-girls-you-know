@@ -12,7 +12,6 @@ class TunnelSection extends Actor {
         let config = {
             xPos: 0,
             isGirl: true,
-            mainPath: null,
             visibleAt: 0,
             outer: {
                 exists: true,
@@ -23,7 +22,7 @@ class TunnelSection extends Actor {
             },
             inner: {
                 exists: true,
-                isEmoji: false,
+                isEmoji: true,
                 isRotatingOnSpine: false,
                 isOscilating: false,
                 isFlipping: true
@@ -48,13 +47,12 @@ class TunnelSection extends Actor {
             for (let j = 1; j <= 4; j++) {
                 let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
                 emojiPaths.push(imagePath);
-                let image = loader.get(imagePath);
-                emojiImages.push(image);
             }
         }
+        this.emojiPaths = emojiPaths;
 
         let mainImage = loader.get("images/girls/" + girl + "/main.png");
-        this.emojiPaths = emojiPaths;
+
 
 
         this.mainImage = mainImage;
@@ -101,7 +99,8 @@ class TunnelSection extends Actor {
                 let end = new THREE.Group();
                 let picture;
                 if (isEmoji) {
-                    picture = this.loader.getPlane(this.emojiPaths[(i + offset) % 4], 2);
+                    let path = this.emojiPaths[(i + offset) % 4];
+                    picture = this.loader.getPlane(path, scale);
                 } else {
                     picture = new THREE.Mesh(geometryA, cardMaterialA);
                     picture.rotation.x = Math.PI / 2;
@@ -121,10 +120,12 @@ class TunnelSection extends Actor {
     }
 
     update(cameraPosition, fpsAdjustment) {
+        // hiding at beginning
         if (cameraPosition >= Utils.locationInSong(1, 0, 0) - 0.1) {
             this.innerSpine.visible = true;
         }
-        // outer spine
+
+        // outer cards
         if (cameraPosition >= Utils.locationInSong(0, 12, 0) - 0.1) {
             this.outerSpine.visible = true;
             if (cameraPosition >= Utils.locationInSong(36, 0, 0) - 0.1) {
@@ -132,19 +133,29 @@ class TunnelSection extends Actor {
             }
         }
         this.outerCards.forEach(card => {
-            // card.end.position.z = Math.sin((card.end.position.x + this.clock.eighthsFraction) * Math.PI / 4) * 2 + 9;
-            // card.center.position.x = -2 * this.clock.eighthsFraction;
+            this.outerSpine.visible = false;
+            let a = Utils.locationInSong(0, 40, 0) - 0.1;
+            let b = Utils.locationInSong(0, 42, 0) - 0.1;
+            let c = Utils.locationInSong(0, 44, 0) - 0.1;
+            let d = Utils.locationInSong(0, 46, 0) - 0.1;
+            if (cameraPosition >= a && cameraPosition < b) {
+                card.end.position.z = Math.sin((card.end.position.x + this.clock.eighthsFraction) * Math.PI / 4) * 2 + 9;
+            }
+            if (cameraPosition >= b && cameraPosition < c) {
+                card.end.position.z = 9
+            }
+            if (cameraPosition >= c && cameraPosition < d) {
+                card.end.position.z = Math.sin((card.end.position.x + this.clock.eighthsFraction) * Math.PI / 4) * 2 + 9;
+            }
+            if (cameraPosition > d) {
+                card.end.position.z = 9
+            }
         });
+
+
+        // inner cards
         let effectIndex = this.clock.bar % 2;
-        // if (this.clock.eighthsFraction >= 32.5) {
         this.innerCards.forEach(card => {
-            // if (cameraPosition >= Utils.locationInSong(1, 0, 0) - 0.1) {
-            //     card.picture.visible = true;
-            // }
-            // if (this.clock.quarter > 64 + 16) {
-
-
-            // card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
 
             if (effectIndex === 0) {
                 card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
@@ -153,14 +164,9 @@ class TunnelSection extends Actor {
                 card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180 * fpsAdjustment);
                 // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
             }
-            // if (effectIndex === 2) {
-            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
-            //     // mesh.rotateZ(0.1);
-            // }
-            // if (effectIndex === 3) {
-            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 1), -1 * Math.PI / 180 * fpsAdjustment);
-            //     // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-            // }
+            if (effectIndex === 2) {
+                // card.picture.translateY(Math.sin(this.clock.eighthsFraction + card.picture.position.x) / 16);
+            }
 
             // mesh.position.x -= .1;
         });
