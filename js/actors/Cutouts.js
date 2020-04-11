@@ -25,21 +25,31 @@ class Cutouts extends Actor {
             paths.push("images/girls/" + girl + "/main.png");
         }
 
-
+        let group = new THREE.Group();
+        let cutouts = [];
         for (let i = 0; i < paths.length; i++) {
             let path = paths[i];
             let scale = 4;
             let plane = loader.getPlane(path, scale);
             let loc = Utils.locationInSong(1 + Math.floor(i / 2), i % 2 * 2, 0);
             plane.position.set(loc, 0, 0);
-            scene.add(plane);
+            cutouts.push(plane);
+            if (i > 0) plane.visible = false;
+            group.add(plane);
         }
+        scene.add(group);
+        this.group = group;
+        this.cutouts = cutouts;
 
     }
 
 
     update(cameraPosition, fpsAdjustment) {
-
+        if (cameraPosition > Utils.locationInSong(1,0,0) - .1) {
+            this.cutouts.forEach(cutout => {
+                cutout.visible = true;
+            });
+        }
     }
 
 }

@@ -36,7 +36,7 @@
     import Sheet from "./js/actors/Sheet.js";
 
     // tracking where we are in the song
-    let clock = new Clock(0, 39, 0);
+    let clock = new Clock(0, 20, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -111,7 +111,7 @@
         actors.push(new Swimmers(scene, clock, girlLoader));
         actors.push(new Rainbow(scene, clock, girlLoader));
         actors.push(new Clouds(scene, clock, girlLoader));
-        actors.push(new Sheet(scene, clock, girlLoader));
+        // actors.push(new Sheet(scene, clock, girlLoader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -166,6 +166,8 @@
             camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
         }
 
+
+        console.log(camera.rotation.z);
 
         // camera.rotation.y = (clock.eighthsFraction * Math.PI) / 16;
 

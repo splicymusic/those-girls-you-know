@@ -9,35 +9,62 @@ class TunnelSection extends Actor {
     constructor(scene, clock, loader, girl, xPos) {
         super(scene, clock, loader);
 
+        let config = {
+            xPos: 0,
+            isGirl: true,
+            mainPath: null,
+            visibleAt: 0,
+            outer: {
+                exists: true,
+                isEmoji: false,
+                isRotatingOnSpine: false,
+                isOscilating: false,
+                isFlipping: true
+            },
+            inner: {
+                exists: true,
+                isEmoji: false,
+                isRotatingOnSpine: false,
+                isOscilating: false,
+                isFlipping: true
+            }
+        };
+        this.config = config;
+
+
+        // loading girlImages
         let girlImages = [];
-        for (let j = 1; j <= 4; j++) {
-            let image = loader.get("images/girls/" + girl + "/" + j + ".jpg");
-            girlImages.push(image);
+        if (config.isGirl) {
+            for (let j = 1; j <= 4; j++) {
+                let image = loader.get("images/girls/" + girl + "/" + j + ".jpg");
+                girlImages.push(image);
+            }
         }
         this.girlImages = girlImages;
 
-        let cardImages = [];
-        let cardPaths = [];
-        for (let j = 1; j <= 4; j++) {
-            let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
-            cardPaths.push(imagePath);
-            let image = loader.get(imagePath);
-            cardImages.push(image);
+        // loading emoji paths
+        let emojiPaths = [];
+        if (config.outer.isEmoji || config.inner.isEmoji) {
+            for (let j = 1; j <= 4; j++) {
+                let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
+                emojiPaths.push(imagePath);
+                let image = loader.get(imagePath);
+                emojiImages.push(image);
+            }
         }
+
         let mainImage = loader.get("images/girls/" + girl + "/main.png");
-        this.emojiPaths = cardPaths;
-        this.emojiImages = cardImages;
+        this.emojiPaths = emojiPaths;
 
 
         this.mainImage = mainImage;
-        this.innerCards = [];
-        this.outerCards = [];
-
-
+        // random color
         this.sideColor = new THREE.Color("hsl(" + Utils.randomInt(255) + ", 100%, 50%)");
 
+        this.innerCards = [];
+        this.outerCards = [];
         this.innerSpine = this.createSpiral(this.innerCards, 5, xPos, 2, 0, true);
-        this.outerSpine = this.createSpiral(this.outerCards, 9, xPos + Utils.locationInSong(0, 0, 2), 3, 0, true);
+        this.outerSpine = this.createSpiral(this.outerCards, 9, xPos + Utils.locationInSong(0, 0, 2), 3, 0, false);
     }
 
     createSpiral(cards, radius, startX, scale, offset, isEmoji) {
@@ -108,7 +135,7 @@ class TunnelSection extends Actor {
             // card.end.position.z = Math.sin((card.end.position.x + this.clock.eighthsFraction) * Math.PI / 4) * 2 + 9;
             // card.center.position.x = -2 * this.clock.eighthsFraction;
         });
-        let effectIndex = this.clock.bar % 4;
+        let effectIndex = this.clock.bar % 2;
         // if (this.clock.eighthsFraction >= 32.5) {
         this.innerCards.forEach(card => {
             // if (cameraPosition >= Utils.locationInSong(1, 0, 0) - 0.1) {
@@ -117,15 +144,15 @@ class TunnelSection extends Actor {
             // if (this.clock.quarter > 64 + 16) {
 
 
-            card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
+            // card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
 
-            // if (effectIndex === 0) {
-            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
-            // }
-            // if (effectIndex === 1) {
-            //     card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180 * fpsAdjustment);
-            //     // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
-            // }
+            if (effectIndex === 0) {
+                card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
+            }
+            if (effectIndex === 1) {
+                card.picture.rotateOnAxis(new THREE.Vector3(0, 1, 0), -1 * Math.PI / 180 * fpsAdjustment);
+                // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
+            }
             // if (effectIndex === 2) {
             //     card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);
             //     // mesh.rotateZ(0.1);

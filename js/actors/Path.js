@@ -9,10 +9,9 @@ class Path extends Actor {
         super(scene, clock, loader);
 
         // floor
-        let floorMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFFCCDD,
-            roughness: 1,
-            flatShading: true
+        let floorMaterial = new THREE.MeshBasicMaterial({
+            color: 0xFFC0CB,
+
         });
         let length = 1000;
         let height = 100;
