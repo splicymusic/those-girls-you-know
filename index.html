@@ -13,7 +13,7 @@
 
     </style>
 </head>
-<body>
+<body onload="window.resizeTo(800, 600);">
 <script src='lib/stats.js/build/stats.min.js'></script>
 <script type="module">
 
@@ -26,6 +26,7 @@
     import Tunnel from "./js/actors/tunnel/Tunnel.js";
     import Stars from "./js/actors/Stars.js";
     import Buildings from "./js/actors/Buildings.js";
+    import Balls from "./js/actors/Balls.js";
     import Cutouts from "./js/actors/Cutouts.js";
     import Path from "./js/actors/Path.js";
     import Sky from "./js/actors/Sky.js";
@@ -36,8 +37,10 @@
     import Sheet from "./js/actors/Sheet.js";
     import Fireworks from "./js/actors/fireworks/Fireworks.js";
 
+    window.resizeTo(600, 400);
+
     // tracking where we are in the song
-    let clock = new Clock(0, 39, 0);
+    let clock = new Clock(0, 0, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -54,7 +57,6 @@
 
     // 3d objects
     let scene, camera;
-    let loader = new THREE.TextureLoader();
 
     // groups of actors
     let actors = [];
@@ -71,10 +73,11 @@
     let fpsAdjustment = 1;
 
     // load in images, initialize 3D scene
-    let girlLoader = new GirlLoader(init);
+    let loader = new GirlLoader(init);
 
 
     function init() {
+
         rendererThree = new THREE.WebGLRenderer();
         rendererThree.antialias = true;
         rendererThree.setSize(window.innerWidth, window.innerHeight);
@@ -101,19 +104,20 @@
         // camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), -0.1);
 
         // addTitle(scene);
-        actors.push(new Sky(scene, clock, girlLoader));
-        actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(1, 0, 0)));
-        actors.push(new Tunnel(scene, clock, girlLoader, Utils.locationInSong(0, 40, 0)));
-        actors.push(new Stars(scene, clock, girlLoader));
-        // actors.push(new Buildings(scene, clock, girlLoader));
-        actors.push(new Cutouts(scene, clock, girlLoader));
-        actors.push(new Path(scene, clock, girlLoader));
-        actors.push(new Blockers(scene, clock, girlLoader));
-        actors.push(new Swimmers(scene, clock, girlLoader));
-        actors.push(new Rainbow(scene, clock, girlLoader));
-        actors.push(new Clouds(scene, clock, girlLoader));
-        // actors.push(new Sheet(scene, clock, girlLoader));
-        actors.push(new Fireworks(scene, clock, girlLoader));
+        actors.push(new Sky(scene, clock, loader));
+        actors.push(new Tunnel(scene, clock, loader, Utils.locationInSong(1, 0, 0), loader.names));
+        actors.push(new Tunnel(scene, clock, loader, Utils.locationInSong(0, 40, 0), loader.names.slice(0,8)));
+        actors.push(new Stars(scene, clock, loader));
+        actors.push(new Buildings(scene, clock, loader));
+        actors.push(new Balls(scene, clock, loader));
+        actors.push(new Cutouts(scene, clock, loader));
+        actors.push(new Path(scene, clock, loader));
+        actors.push(new Blockers(scene, clock, loader));
+        actors.push(new Swimmers(scene, clock, loader));
+        actors.push(new Rainbow(scene, clock, loader));
+        actors.push(new Clouds(scene, clock, loader));
+        // actors.push(new Sheet(scene, clock, loader));
+        actors.push(new Fireworks(scene, clock, loader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -136,27 +140,6 @@
     }
 
 
-    function addTitle(scene) {
-        let texture = loader.load('images/title card.png');
-        texture.minFilter = THREE.LinearFilter;
-        let material = new THREE.MeshLambertMaterial({
-            map: texture,
-            fog: true,
-            side: THREE.DoubleSide,
-            transparent: true
-        });
-        let scale = 6;
-        let geometry = new THREE.PlaneGeometry(scale * 1000 / 1000, scale); // those girls
-        let mesh = new THREE.Mesh(geometry, material);
-        let loc = Utils.locationInSong(0, 2, 0);
-        mesh.position.set(loc, 0, .5);
-        mesh.rotation.y = -Math.PI / 2;
-        mesh.rotation.x = Math.PI / 2;
-        mesh.receiveShadow = false;
-        mesh.castShadow = false;
-        scene.add(mesh);
-
-    }
 
     function updateCamera() {
         // strut

@@ -12,6 +12,10 @@ class Clock {
         this.seconds = this.startSeconds;
         this.millis = this.startMillis;
         this.frame = 0;
+        this.quarter = 0;
+        this.eigth = 0;
+        this.isNewQuarter = false;
+        this.isNewEigth = false;
     }
 
     start() {
@@ -26,8 +30,22 @@ class Clock {
         this.millis = (now - this.start) + this.startMillis;
         this.eighthsFraction = this.seconds / this.eighthSeconds;
         this.quarterFraction = this.seconds / this.quarterSeconds;
-        this.eighth =  Math.floor(this.seconds / this.eighthSeconds);
-        this.quarter =  Math.floor(this.seconds / this.quarterSeconds);
+
+        let newQuarter = Math.floor(this.seconds / this.quarterSeconds);
+        if (newQuarter !== this.quarter) {
+            this.quarter =  newQuarter;
+            this.isNewQuarter = true;
+        } else {
+            this.isNewQuarter = false;
+        }
+
+        let newEigth = Math.floor(this.seconds / this.eighthSeconds);
+        if (newEigth !== this.eigth) {
+            this.eigth =  newEigth;
+            this.isNewEigth = true;
+        } else {
+            this.isNewEigth = false;
+        }
         this.bar = Math.floor(this.seconds / this.barSeconds);
         this.section = Math.floor(this.seconds / this.sectionSeconds);
     }

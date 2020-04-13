@@ -17,12 +17,13 @@ class Swimmers extends Actor {
 
         let cutouts = [];
         let group = new THREE.Group();
+        // a little deeper than 2 measures so it's full to off camera at beginning
+        let crowdDepth = Utils.locationInSong(2, 1, 0);
+        let loc = Utils.locationInSong(0, 39, 0) - crowdDepth;
+        let scale = 4;
         for (let i = 0; i < 700; i++) {
             let path = paths[i % paths.length];
-            let scale = 4;
             let cutout = loader.getPlane(path, scale);
-            let crowdDepth = Utils.locationInSong(2, 0, 0);
-            let loc = Utils.locationInSong(0, 39, 0) - crowdDepth;
             let xPos = loc +  Utils.randomInt(crowdDepth) + Math.random() * .2;
             let yPos =  Utils.randomInt(48) - 24;
             //let zPos = -1 * Utils.randomInt(Math.abs(yPos)) + 0.25 * Math.abs(yPos) - 1.5;
@@ -52,6 +53,7 @@ class Swimmers extends Actor {
             this.group.visible = true;
             this.group.position.x += 0.3 * fpsAdjustment;
         }
+
         if (cameraPosition >= b && cameraPosition < e) {
             this.group.position.x = Utils.locationInSong(0, 10, 0);
             this.cutouts.forEach(cutout => {
@@ -64,15 +66,6 @@ class Swimmers extends Actor {
             this.group.visible = false;
         }
 
-
-
-        this.cutouts.forEach(cutout => {
-            // if (cutout.position.x < cameraPosition + 4) {
-            //     cutout.rotation.y += 0.02 * fpsAdjustment;
-                // center.position.x -= 0.1;
-                // cutout.position.y -= 0.1;
-            // }
-        });
     }
 
 }

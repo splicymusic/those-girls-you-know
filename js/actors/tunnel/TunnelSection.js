@@ -154,7 +154,7 @@ class TunnelSection extends Actor {
 
 
         // inner cards
-        let effectIndex = this.clock.bar % 2;
+        let effectIndex = this.clock.bar % 1;
         this.innerCards.forEach(card => {
 
             if (effectIndex === 0) {
@@ -165,6 +165,7 @@ class TunnelSection extends Actor {
                 // mesh.translateY(Math.sin(clock.eighthsFraction + mesh.position.x) / 16);
             }
             if (effectIndex === 2) {
+                card.picture.rotateOnAxis(new THREE.Vector3(1, 0, 0), -1 * Math.PI / 180 * fpsAdjustment);
                 // card.picture.translateY(Math.sin(this.clock.eighthsFraction + card.picture.position.x) / 16);
             }
 

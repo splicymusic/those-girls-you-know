@@ -82,7 +82,6 @@ class Loader {
             "images/emoji/growing-heart.png",
             "images/emoji/heart-eyes.png",
             "images/emoji/kiss.png",
-            "images/emoji/lips.png",
             "images/emoji/orange-heart.png",
             "images/emoji/pink-bow.png",
             "images/emoji/pink-flower.png",

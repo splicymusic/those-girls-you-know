@@ -16,6 +16,7 @@ class Sky extends Actor {
 
         this.scene.background = this.skyBlue;
         this.scene.fog = new THREE.FogExp2(0xDDDDFF, 0.05);
+        this.blackFog = new THREE.FogExp2(0x000000, 0.05);
         this.colors = [];
         this.darks = [];
         this.fogs = [];
@@ -37,22 +38,24 @@ class Sky extends Actor {
         // TODO: WARNING this code hits FPS pretty hard
         // NOTE: FPS hit not as bad when not an outer tunnel
 
-        // if (cameraPosition >= Utils.locationInSong(0, 20, 0)) {
-        //     this.scene.background = this.black;
-        // }
+        if (cameraPosition >= Utils.locationInSong(0, 20, 0)) {
+            this.scene.background = this.skyBlue;
+        }
 
         // solo
-        // if (cameraPosition >= Utils.locationInSong(0, 26, 0) - 0.1) {
-        //     this.scene.background = this.skyBlue;
-        // }
+        if (cameraPosition >= Utils.locationInSong(0, 26, 0) - 0.1) {
+            this.scene.background = this.orange;
+        }
 
-        // if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
-        //     this.scene.background = this.black;
-        // }
+        if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
+            this.scene.background = this.black;
+            this.scene.fog = this.blackFog;
+        }
 
         // calm before the storm
-        if (cameraPosition >= Utils.locationInSong(0, 36, 0)) {
-            this.scene.background = this.purple;
+        if (cameraPosition >= Utils.locationInSong(0, 36, 0) - 0.1) {
+            this.scene.background = this.black;
+            this.scene.fog = this.blackFog;
         }
 
         // bass comes in

@@ -11,7 +11,8 @@ class Clouds extends Actor {
         let clouds = [];
         let span = 200;
         for (let i = 0; i < 25; i++) {
-            let cloud = loader.getPlane("images/emoji/cloud.png", Math.random() * 15 + 5);
+            let size = Math.random() * 15 + 5;
+            let cloud = loader.getPlane("images/emoji/cloud.png", size);
             let x = Math.random() * 5;
             let y = Math.random() * span - span / 2;
             let z = Math.random() * 100 - 50;
@@ -19,7 +20,11 @@ class Clouds extends Actor {
             if (Math.sqrt(z * z + y * y) < 15) continue;
             cloud.position.set(x, y, z);
             cloud.material.opacity = 0.7;
-            clouds.push(cloud);
+            let object = {
+                cloud: cloud,
+                velocity: size / 175 + .01
+            };
+            clouds.push(object);
             scene.add(cloud);
         }
         this.clouds = clouds;
@@ -29,18 +34,20 @@ class Clouds extends Actor {
 
 
     update(cameraPosition, fpsAdjustment) {
-        this.clouds.forEach(cloud => {
-            cloud.position.y += 0.025;
-            cloud.position.x = cameraPosition + 50;
-            if (cloud.position.y > this.span / 2) cloud.position.y -= this.span;
+        this.clouds.forEach(object => {
+            object.cloud.position.y += object.velocity;
+            object.cloud.position.x = cameraPosition + 50;
+            if (object.cloud.position.y > this.span / 2) object.cloud.position.y -= this.span;
 
             // fades to noting at center of screen so as to not visually interfere with the
             // foreground elements
-            let fromCenter = Math.abs(cloud.position.y);
-            let radius = 60;
-            if (fromCenter < radius) {
-                let factor = Math.max(fromCenter - 20, 0) / radius;
-                cloud.material.opacity = 0.7 * factor;
+            if (cameraPosition > Utils.locationInSong(1, 0, 0)) {
+                let fromCenter = Math.abs(object.cloud.position.y);
+                let radius = 60;
+                if (fromCenter < radius) {
+                    let factor = Math.max(fromCenter - 20, 0) / radius;
+                    object.cloud.material.opacity = 0.7 * factor;
+                }
             }
         });
     }

@@ -9,9 +9,9 @@ class Fireworks extends Actor {
     constructor(scene, clock, loader) {
         super(scene, clock, loader);
         this.burstsA = [];
-        this.burst(scene, clock, loader, this.burstsA, Utils.locationInSong(0, 42, 0), 5);
+        this.burst(scene, clock, loader, this.burstsA, Utils.locationInSong(0, 42, 0), 8);
         this.burstsB = [];
-        this.burst(scene, clock, loader, this.burstsB, Utils.locationInSong(0, 44, 0), 5);
+        this.burst(scene, clock, loader, this.burstsB, Utils.locationInSong(0, 44, 0), 8);
         this.burstsC = [];
         this.burst(scene, clock, loader, this.burstsC, Utils.locationInSong(0, 46, 0), 10);
         this.burstsD = [];

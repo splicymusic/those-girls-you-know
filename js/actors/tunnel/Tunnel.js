@@ -5,12 +5,12 @@ import TunnelSection from "./TunnelSection.js";
 
 
 class Tunnel extends Actor {
-    constructor(scene, clock, loader, x) {
+    constructor(scene, clock, loader, x, names) {
         super(scene, clock, loader);
 
         let sections = [];
-        for (let i = 0; i < loader.names.length; i++) {
-            let name = loader.names[i];
+        for (let i = 0; i < names.length; i++) {
+            let name = names[i];
             let xPos = x + Utils.locationInSong(0, i * 2, 6);
             sections.push(new TunnelSection(scene, clock, loader, name, xPos));
         }

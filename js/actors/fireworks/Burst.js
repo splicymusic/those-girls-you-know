@@ -34,9 +34,7 @@ class Burst extends Actor {
 
     trigger() {
         this.group.visible = true;
-        if (!this.triggered) {console.log("triggered");}
         this.triggered = true;
-
     }
 
 
