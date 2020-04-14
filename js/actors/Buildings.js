@@ -58,7 +58,7 @@ class Buildings extends Actor {
         let canyonWidth = 6;
         let leftBound = -canyonWidth;
         let rightBound = canyonWidth;
-        let pathOffset = 2;
+        let pathOffset = Utils.pathPosition();
         let xLoc = Utils.locationInSong(0,20,0);
         this.xLoc = xLoc;
         let buildings = [];
@@ -75,7 +75,7 @@ class Buildings extends Actor {
 
             building.position.x = cubeX;
             building.position.y = cubeY;
-            building.position.z =  - pathOffset;
+            building.position.z =  pathOffset;
             // building.position.z = height / 2 - pathOffset;
             buildings.push(building);
             group.add(building);
@@ -93,7 +93,7 @@ class Buildings extends Actor {
         });
         let baseBox = new THREE.BoxGeometry(arenaSize, arenaSize, 50);
         let base = new THREE.Mesh(baseBox, baseMaterial);
-        base.position.set(xLoc + arenaSize / 2, 0, 50 / -2 - pathOffset - 0.01);
+        base.position.set(xLoc + arenaSize / 2, 0, 50 / -2 + pathOffset - 0.01);
         group.add(base);
 
         group.visible = false;

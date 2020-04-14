@@ -10,6 +10,7 @@ class Clouds extends Actor {
 
         let clouds = [];
         let span = 200;
+        let group = new THREE.Group();
         for (let i = 0; i < 25; i++) {
             let size = Math.random() * 15 + 5;
             let cloud = loader.getPlane("images/emoji/cloud.png", size);
@@ -24,9 +25,12 @@ class Clouds extends Actor {
                 cloud: cloud,
                 velocity: size / 175 + .01
             };
+            group.add(cloud);
             clouds.push(object);
-            scene.add(cloud);
+
         }
+        scene.add(group);
+        this.group = group;
         this.clouds = clouds;
         this.span = span;
     }
@@ -34,6 +38,16 @@ class Clouds extends Actor {
 
 
     update(cameraPosition, fpsAdjustment) {
+
+        let a = Utils.locationInSong(0, 30, 0) - 0.1;
+        let b = Utils.locationInSong(0, 40, 0) - 0.1;
+        if (cameraPosition >= a && cameraPosition < b) {
+            this.group.visible = false;
+        }
+        if (cameraPosition >= b) {
+            this.group.visible = true;
+        }
+
         this.clouds.forEach(object => {
             object.cloud.position.y += object.velocity;
             object.cloud.position.x = cameraPosition + 50;

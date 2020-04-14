@@ -20,18 +20,13 @@ class Path extends Actor {
         let pedestalGeometry = new THREE.BoxGeometry(length, width, height);
         let path = new THREE.Mesh(pedestalGeometry, floorMaterial);
         path.position.x = Utils.locationInSong(0 , 4, 0) + length / 2;
-        path.position.z = -2 - (height / 2);
+        path.position.z = Utils.pathPosition() - (height / 2);
         path.visible = false;
         this.path = path;
 
-        let baseGeometry = new THREE.BoxGeometry(length, 10, height);
-        let base = new THREE.Mesh(baseGeometry, floorMaterial);
-        base.position.x = Utils.locationInSong(0 , 4, 0) + length / 2;
-        base.position.z = -10 - (height / 2);
-        this.base = base;
+
 
         scene.add(path);
-        // scene.add(base);
     }
 
 

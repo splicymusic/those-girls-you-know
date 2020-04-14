@@ -44,17 +44,20 @@ class Sky extends Actor {
 
         // solo
         if (cameraPosition >= Utils.locationInSong(0, 26, 0) - 0.1) {
-            this.scene.background = this.orange;
+            this.scene.background = this.skyBlue;
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
             this.scene.background = this.black;
-            this.scene.fog = this.blackFog;
+            // this.scene.fog = this.blackFog;
         }
 
         // calm before the storm
         if (cameraPosition >= Utils.locationInSong(0, 36, 0) - 0.1) {
             this.scene.background = this.black;
+        }
+
+        if (cameraPosition >= Utils.locationInSong(0, 38, 0) - 0.1) {
             this.scene.fog = this.blackFog;
         }
 

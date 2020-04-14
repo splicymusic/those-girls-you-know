@@ -33,6 +33,7 @@
     import Blockers from "./js/actors/Blockers.js";
     import Swimmers from "./js/actors/Swimmers.js";
     import Rainbow from "./js/actors/Rainbow.js";
+    import Sunset from "./js/actors/Sunset.js";
     import Clouds from "./js/actors/Clouds.js";
     import Sheet from "./js/actors/Sheet.js";
     import Fireworks from "./js/actors/fireworks/Fireworks.js";
@@ -44,8 +45,8 @@
 
     // stats to optimize performance
     let stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    // document.body.appendChild(stats.dom);
 
     // audio
     let those_girls_you_know = new Audio('music/Those Girls You Know.mp3');
@@ -115,6 +116,7 @@
         actors.push(new Blockers(scene, clock, loader));
         actors.push(new Swimmers(scene, clock, loader));
         actors.push(new Rainbow(scene, clock, loader));
+        actors.push(new Sunset(scene, clock, loader));
         actors.push(new Clouds(scene, clock, loader));
         // actors.push(new Sheet(scene, clock, loader));
         actors.push(new Fireworks(scene, clock, loader));

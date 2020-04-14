@@ -133,6 +133,7 @@ class TunnelSection extends Actor {
             }
         }
         this.outerCards.forEach(card => {
+            // TODO: this hack   hides
             this.outerSpine.visible = false;
             let a = Utils.locationInSong(0, 40, 0) - 0.1;
             let b = Utils.locationInSong(0, 42, 0) - 0.1;

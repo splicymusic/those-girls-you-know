@@ -17,7 +17,7 @@ class Fireworks extends Actor {
         this.burstsD = [];
         this.burst(scene, clock, loader, this.burstsD, Utils.locationInSong(0, 48, 0), 10);
         this.burstsE = [];
-        this.burst(scene, clock, loader, this.burstsE, Utils.locationInSong(0, 50, 0), 25);
+        this.burst(scene, clock, loader, this.burstsE, Utils.locationInSong(0, 50, 0), 15);
     }
 
     burst(scene, clock, loader, group, xPos, amount) {

@@ -92,6 +92,7 @@ class Loader {
         ];
 
         imageList.push("images/rainbow.png");
+        imageList.push("images/sunset.png");
         imageList.push("images/blank.png");
         this.imageList = imageList;
 

@@ -33,7 +33,7 @@ class Cutouts extends Actor {
             let scale = 4;
             let plane = loader.getPlane(path, scale);
             let loc = Utils.locationInSong(1 + Math.floor(i / 2), i % 2 * 2, 0);
-            plane.position.set(loc, 0, 0);
+            plane.position.set(loc, 0, Utils.pathPosition() + scale / 2);
             cutouts.push(plane);
             if (i > 0) plane.visible = false;
             group.add(plane);
