@@ -27,7 +27,7 @@
     import EmojiTunnel from "./js/actors/tunnel/EmojiTunnel.js";
     import Stars from "./js/actors/Stars.js";
     import Buildings from "./js/actors/Buildings.js";
-    import Balls from "./js/actors/Balls.js";
+    import Wave from "./js/actors/Wave.js";
     import Cutouts from "./js/actors/Cutouts.js";
     import Path from "./js/actors/Path.js";
     import Sky from "./js/actors/Sky.js";
@@ -109,11 +109,11 @@
         // addTitle(scene);
         actors.push(new Sky(scene, clock, loader));
 
-        // actors.push(new EmojiTunnel(scene, clock, loader, Utils.locationInSong(1, 0, 0), 26 * 2));
+        actors.push(new EmojiTunnel(scene, clock, loader, Utils.locationInSong(1, 0, 0), 26 * 2));
         actors.push(new EmojiTunnel(scene, clock, loader, Utils.locationInSong(0, 41, 0), 8 * 2));
         actors.push(new Stars(scene, clock, loader));
         actors.push(new Buildings(scene, clock, loader));
-        actors.push(new Balls(scene, clock, loader));
+        actors.push(new Wave(scene, clock, loader));
         actors.push(new Cutouts(scene, clock, loader));
         actors.push(new Path(scene, clock, loader));
         actors.push(new Blockers(scene, clock, loader));
