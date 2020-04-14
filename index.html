@@ -24,6 +24,7 @@
 
     // Actors
     import Tunnel from "./js/actors/tunnel/Tunnel.js";
+    import EmojiTunnel from "./js/actors/tunnel/EmojiTunnel.js";
     import Stars from "./js/actors/Stars.js";
     import Buildings from "./js/actors/Buildings.js";
     import Balls from "./js/actors/Balls.js";
@@ -36,12 +37,13 @@
     import Sunset from "./js/actors/Sunset.js";
     import Clouds from "./js/actors/Clouds.js";
     import Sheet from "./js/actors/Sheet.js";
+    import FinalImage from "./js/actors/FinalImage.js";
     import Fireworks from "./js/actors/fireworks/Fireworks.js";
 
     window.resizeTo(600, 400);
 
     // tracking where we are in the song
-    let clock = new Clock(0, 0, 0);
+    let clock = new Clock(0, 30, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -106,8 +108,9 @@
 
         // addTitle(scene);
         actors.push(new Sky(scene, clock, loader));
-        actors.push(new Tunnel(scene, clock, loader, Utils.locationInSong(1, 0, 0), loader.names));
-        actors.push(new Tunnel(scene, clock, loader, Utils.locationInSong(0, 40, 0), loader.names.slice(0,8)));
+
+        // actors.push(new EmojiTunnel(scene, clock, loader, Utils.locationInSong(1, 0, 0), 26 * 2));
+        actors.push(new EmojiTunnel(scene, clock, loader, Utils.locationInSong(0, 41, 0), 8 * 2));
         actors.push(new Stars(scene, clock, loader));
         actors.push(new Buildings(scene, clock, loader));
         actors.push(new Balls(scene, clock, loader));
@@ -120,6 +123,7 @@
         actors.push(new Clouds(scene, clock, loader));
         // actors.push(new Sheet(scene, clock, loader));
         actors.push(new Fireworks(scene, clock, loader));
+        actors.push(new FinalImage(scene, clock, loader));
 
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);

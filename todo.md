@@ -33,9 +33,6 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 
 ## Spots:
 * second chorus: pictures?
-* final those girls image
-* tunnel hidden during second chorus
-* 2nd tunnel hidden
 
 
 ## description
