@@ -4,8 +4,6 @@
 * load progress monitor
 
 ## save movie
-* https://github.com/spite/ccapture.js/
-* https://github.com/josdirksen/threejs-cookbook/blob/master/07-animations-physics/07.07-save-a-movie-of-an-animation.html
 * The ideal dimensions for a standard YouTube video are 1080p, or 1920 x 1080. 
 
 ## Accounts
@@ -17,7 +15,6 @@
 
 
 ## Ideas
-
 A "starry night" implementation:
 https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 
@@ -36,9 +33,11 @@ A celebration of the iconic women of the 1970s. How many do you recognize?  Who'
  
 itunes:
 amazon:
-spotify:
-source:
+spotif: 
 
-no software; just javscript (three.js).  made with in about 3 weeks.  first music video ever made with js?  dunno
+I made this in about 3 weeks in JavaScript.  First music video ever made with JS?
 interactive version: http://SPLICY.com
+
 source: 
+ THREE.js -- for the everything
+ CCapture -- to export the video 

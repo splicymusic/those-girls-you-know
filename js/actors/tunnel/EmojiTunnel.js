@@ -18,22 +18,23 @@ class EmojiTunnel extends Actor {
         }
         this.emojiPaths = emojiPaths;
         this.innerCards = [];
-        this.innerSpine = this.createSpiral(this.innerCards, 5, 2, 0);
+        this.innerSpine = this.createSpiral(this.innerCards, 5, 2);
     }
 
-    createSpiral(cards, radius, scale, offset) {
+    createSpiral(cards, radius, scale) {
 
         let spine = new THREE.Group();
         for (let i = 0; i < this.tunnelLength; i++) {
 
+            let path = this.emojiPaths[Utils.randomInt(this.emojiPaths.length)];
             for (let j = 0; j < 16; j++) {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let center = new THREE.Group();
                 let end = new THREE.Group();
                 let picture;
 
-                    let path = this.emojiPaths[(i + offset) % 4];
-                    picture = this.loader.getPlane(path, scale);
+
+                picture = this.loader.getPlane(path, scale);
 
                 end.add(picture);
                 end.position.set(i * 4 + this.xPos + j * .25, 0, radius);

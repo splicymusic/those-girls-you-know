@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+<script src="lib/CCapture.all.min.js"></script>
 <script src='lib/stats.js/build/stats.min.js'></script>
 <script type="module">
 
@@ -38,9 +39,13 @@
     import FinalImage from "./js/actors/FinalImage.js";
     import Fireworks from "./js/actors/fireworks/Fireworks.js";
 
+    // Used for exporting animation.  Set isCaptured to true to export.
+    var capturer = new CCapture( { format: 'png' } );
+    let canvas;
+    let isCaptured = false;
 
     // tracking where we are in the song
-    let clock = new Clock(0, 38, 0);
+    let clock = new Clock(0, 0, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -77,11 +82,11 @@
 
 
     function init() {
-
         rendererThree = new THREE.WebGLRenderer();
         rendererThree.antialias = true;
         rendererThree.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(rendererThree.domElement);
+        canvas = rendererThree.domElement;
+        document.body.appendChild(canvas);
 
         scene = new THREE.Scene();
 
@@ -122,6 +127,10 @@
         actors.push(new Fireworks(scene, clock, loader));
         actors.push(new FinalImage(scene, clock, loader));
 
+        if (isCaptured) {
+            capturer.start();
+        }
+
         document.addEventListener('keydown', onDocumentKeyDown, false);
         document.addEventListener('keyup', onDocumentKeyUp, false);
         document.addEventListener('mouseup', mouseUp, false);
@@ -139,7 +148,17 @@
         rendererThree.render(scene, camera);
         calculateFps();
         stats.end();
+        capture();
         requestAnimationFrame(animate);
+    }
+
+    function capture() {
+        if (isCaptured) {
+            capturer.capture(canvas);
+            if (clock.isNewQuarter && clock.quarter === 50 * 4) {
+                capturer.save();
+            }
+        }
     }
 
 
@@ -174,16 +193,13 @@
 
     function play() {
         if (!isPlaying) {
-            // those_girls_you_know.oncanplaythrough = function () {
-            those_girls_you_know.currentTime = clock.seconds;
-            those_girls_you_know.play();
-            // when music loaded, animate
+            if (!isCaptured) {
+                those_girls_you_know.currentTime = clock.seconds;
+                those_girls_you_know.play();
+            }
             isPlaying = true;
             clock.start();
             animate();
-            // starting our clock, defining start position in animation
-
-            // };
         }
     }
 
@@ -248,5 +264,6 @@
 
 
 </script>
+<!--<canvas id="screen"></canvas>-->
 </body>
 </html>

@@ -41,7 +41,7 @@ class Wave extends Actor {
                 //     continue;
                 // }
                 let path;
-                if (xPos === 250 && yPos === 3) {
+                if (xPos === 250 && yPos === 1) {
                     path = "images/mom/IMG_0066.JPG";
                 } else {
                     path = paths[count % paths.length];
