@@ -14,6 +14,10 @@ class Swimmers extends Actor {
             let girl = loader.names[i];
             paths.push("images/girls/" + girl + "/main.png");
         }
+        // for (let i = 0; i < loader.names2.length; i++) {
+        //     let girl = loader.names2[i];
+        //     paths.push("images/girls2/" + girl + "/main.png");
+        // }
 
         let cutouts = [];
         let group = new THREE.Group();

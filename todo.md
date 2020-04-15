@@ -1,8 +1,4 @@
 
-
-
-squares lighting up in time
-
 ## three js performance
 * audio loader: https://threejs.org/docs/#api/en/loaders/AudioLoader
 * load progress monitor
@@ -15,7 +11,6 @@ squares lighting up in time
 ## Accounts
 * Youtube: CHECK
 * ReverbNation: CHECK
-* SoundCloud
 * Instagram
 * Twitter
 * Facebook (for the olds who still use it)
@@ -30,16 +25,20 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 * MGMT - Time to Pretend
 * White Stripes - Seven Nation Army
 * Fazerdaze - Little Uneasy
+* Heaven's Gate website
 
 ## Spots:
-* second chorus: pictures?
-
 
 ## description
 SPLICY - Those Girls You know [70s ICONS]
 
-A celebration of the iconic women of the 1970s. (How many do you recognize?)
+A celebration of the iconic women of the 1970s. How many do you recognize?  Who's your favorite?  Did we miss anyone?
+ 
+itunes:
+amazon:
+spotify:
+source:
 
-No software; just JavaScript (THREE.js).  Made with THREE.js in about 3 weeks.
-Interact with it at SPLICY.com
-Source code available at: 
+no software; just javscript (three.js).  made with in about 3 weeks.  first music video ever made with js?  dunno
+interactive version: http://SPLICY.com
+source: 

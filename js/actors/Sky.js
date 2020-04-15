@@ -14,8 +14,8 @@ class Sky extends Actor {
         this.purple = new THREE.Color('purple');
         this.white = new THREE.Color('white');
 
-        this.scene.background = this.skyBlue;
-        this.scene.fog = new THREE.FogExp2(0xDDDDFF, 0.05);
+
+        this.lightFog =  new THREE.FogExp2(0xDDDDFF, 0.05);
         this.blackFog = new THREE.FogExp2(0x000000, 0.05);
         this.colors = [];
         this.darks = [];
@@ -29,7 +29,9 @@ class Sky extends Actor {
             let dark = new THREE.Color("hsl(" + hue + ", 100%, 10%)");
             this.darks.push(dark);
         }
-        scene.color = 0xFFFFFF;
+        this.scene.background = this.skyBlue;
+        this.scene.fog = this.lightFog
+        this.scene.color = 0xFFFFFF;
 
     }
 
@@ -49,11 +51,14 @@ class Sky extends Actor {
 
         if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
             this.scene.background = this.black;
-            // this.scene.fog = this.blackFog;
+            if (this.clock.isNewQuarter) {
+                this.scene.fog = this.fogs[Utils.randomInt(this.fogs.length)];
+            }
         }
 
         // calm before the storm
         if (cameraPosition >= Utils.locationInSong(0, 36, 0) - 0.1) {
+            this.scene.fog = this.lightFog;
             this.scene.background = this.black;
         }
 

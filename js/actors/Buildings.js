@@ -69,7 +69,8 @@ class Buildings extends Actor {
             if (cubeY > leftBound && cubeY < rightBound) continue;
             let height = Utils.randomInt(6) + 1;
             //let geometry = new THREE.BoxGeometry(1, 1, height);
-            let geometry = new THREE.OctahedronBufferGeometry(1,0);
+            //let geometry = new THREE.OctahedronBufferGeometry(1,0);
+            let geometry = new THREE.SphereBufferGeometry(1, 32, 32);
             geometry.scale(1, 1, height);
             let building = new THREE.Mesh(geometry, shinyMaterial);
 
@@ -91,9 +92,9 @@ class Buildings extends Actor {
             transparent: true,
             opacity: 0.5
         });
-        let baseBox = new THREE.BoxGeometry(arenaSize, arenaSize, 50);
+        let baseBox = new THREE.BoxGeometry(arenaSize, arenaSize, 0.5);
         let base = new THREE.Mesh(baseBox, baseMaterial);
-        base.position.set(xLoc + arenaSize / 2, 0, 50 / -2 + pathOffset - 0.01);
+        base.position.set(xLoc + arenaSize / 2, 0, 0.5 / -2 + pathOffset - 0.01);
         group.add(base);
 
         group.visible = false;

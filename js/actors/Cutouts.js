@@ -12,7 +12,6 @@ class Cutouts extends Actor {
             "images/title card.png",
         ];
 
-        // 16
         for (let i = 0; i < loader.names.length; i++) {
             let girl = loader.names[i];
             paths.push("images/girls/" + girl + "/main.png");
@@ -20,10 +19,10 @@ class Cutouts extends Actor {
 
         paths.push("images/title card.png");
         // paths.push("images/blank.png");
-        let namesB = loader.names.slice(0,5);
+        let namesB = loader.names2;
         for (let i = 0; i < namesB.length; i++) {
             let girl = namesB[i];
-            paths.push("images/girls/" + girl + "/main.png");
+            paths.push("images/girls2/" + girl + "/main.png");
         }
 
         let group = new THREE.Group();
@@ -34,10 +33,14 @@ class Cutouts extends Actor {
             let plane = loader.getPlane(path, scale);
             let loc = Utils.locationInSong(1 + Math.floor(i / 2), i % 2 * 2, 0);
             let zPos = Utils.pathPosition() + scale / 2;
+            let yPos = 0;
             if (path.endsWith("card.png")) {
                 zPos += 0.5;
             }
-            plane.position.set(loc, 0, zPos);
+            if (path.endsWith("Bisett/main.png")) {
+                yPos = -1.1;
+            }
+            plane.position.set(loc, yPos, zPos);
             cutouts.push(plane);
             if (i > 0) plane.visible = false;
             group.add(plane);

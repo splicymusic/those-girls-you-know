@@ -40,12 +40,21 @@ class Wave extends Actor {
                 //     yPos += spacing;
                 //     continue;
                 // }
-                let path = paths[count % paths.length];
+                let path;
+                if (xPos === 250 && yPos === 3) {
+                    path = "images/mom/IMG_0066.JPG";
+                } else {
+                    path = paths[count % paths.length];
+                }
                 let building = loader.getPlane(path, cardWidth);
+
 
                 building.position.x = xPos + Math.random() * 2;
                 building.position.y = yPos;
                 building.position.z = -2;
+                if (path.endsWith("Dey/1.jpg")) {
+                    console.log("dey: " + xPos + "," + yPos);
+                }
                 buildings.push(building);
                 group.add(building);
                 yPos += spacing;
@@ -66,18 +75,15 @@ class Wave extends Actor {
 
 
     update(cameraPosition, fpsAdjustment) {
-        if (cameraPosition > Utils.locationInSong(0, 29.25, 0) - 0.1) {
+        if (cameraPosition > Utils.locationInSong(0, 29.125, 0) - 0.1) {
             if (this.amplitude < 1) {
-                this.amplitude += .01 * fpsAdjustment;
+                this.amplitude += .005 * fpsAdjustment;
             } else {
                 this.amplitude = 1;
             }
 
             this.buildings.forEach(building => {
                 // amplitude will vary sinusoidally
-                let ampMultiplier = Math.cos(this.clock.quarterFraction * Math.PI / 2) * Math.sqrt(4);
-                ampMultiplier *= ampMultiplier;
-                // building.position.z = Math.sin((building.position.y + this.clock.eighthsFraction) * Math.PI / 2) * ampMultiplier - 4 + ampMultiplier;
                 let xFactor =  Math.sin((building.position.x - cameraPosition) * Math.PI / 16);
                 let yFactor =  Math.sin((building.position.y - cameraPosition) * Math.PI / 16);
                 building.position.z = xFactor * yFactor * 4 * this.amplitude -2  ;

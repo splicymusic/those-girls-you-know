@@ -4,6 +4,8 @@ class Loader {
 
     constructor(callback) {
         this.loader = new THREE.TextureLoader();
+        let imageList = [];
+
         let names = [
             "Barbi Benton",
             "Bo Derek",
@@ -23,17 +25,21 @@ class Loader {
             "Susan Dey",
         ];
         this.names = names;
-        let imageList = [];
-        for (let i = 0; i < names.length; i++) {
-            let girl = names[i];
-            for (let j = 1; j <= 4; j++) {
-                imageList.push("images/girls/" + girl + "/" + j + ".jpg");
-            }
-        }
-        for (let i = 0; i < names.length; i++) {
-            let girl = names[i];
-            imageList.push("images/girls/" + girl + "/main.png")
-        }
+        this.pushImages(imageList, "images/girls/", names);
+
+
+
+        let names2 = [
+            "Victoria Principal",
+            "Jacqueline Bisett",
+            "Lola Falana",
+            "Jane Seymour",
+            "Cybill Shepherd",
+        ];
+        this.names2 = names2;
+        this.pushImages(imageList, "images/girls2/", names2);
+
+
         imageList.push("images/title card.png");
 
         this.makeup = [
@@ -94,12 +100,26 @@ class Loader {
         imageList.push("images/rainbow.png");
         imageList.push("images/sunset.png");
         imageList.push("images/blank.png");
+        imageList.push("images/mom/IMG_0066.JPG");
         this.imageList = imageList;
 
 
         this.images = {};
         this.index = 0;
         this.loadImage(callback);
+    }
+
+    pushImages(imageList, path, names) {
+        for (let i = 0; i < names.length; i++) {
+            let girl = names[i];
+            for (let j = 1; j <= 4; j++) {
+                imageList.push(path + girl + "/" + j + ".jpg");
+            }
+        }
+        for (let i = 0; i < names.length; i++) {
+            let girl = names[i];
+            imageList.push(path + girl + "/main.png")
+        }
     }
 
     get(path) {

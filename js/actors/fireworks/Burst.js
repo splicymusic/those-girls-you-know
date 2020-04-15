@@ -46,7 +46,7 @@ class Burst extends Actor {
                 star.position.z += 0.5 * fpsAdjustment;
                 // star fade
                 if (star.material.opacity > 0.01) {
-                    star.material.opacity *= 0.9 * fpsAdjustment;
+                    star.material.opacity *= 0.8 * fpsAdjustment;
                 } else {
                     star.visible = false;
                 }
