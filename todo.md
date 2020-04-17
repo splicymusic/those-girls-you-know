@@ -28,9 +28,9 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 ## Spots:
 
 ## description
-SPLICY - Those Girls You know [70s ICONS]
+SPLICY - Those Girls You know [70s Icons]
 
-A celebration of the iconic women of the 1970s. How many do you recognize?  Who's your favorite?  Did i miss anyone?
+How many of these fantastic ladies do you recognize?  Who's your favorite?  Did I miss anyone?
  
 itunes: https://music.apple.com/us/album/those-girls-you-know-single/1505735361
 amazon: https://music.amazon.com/albums/B086L222Y8

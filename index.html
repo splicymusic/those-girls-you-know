@@ -85,7 +85,11 @@
     function init() {
         rendererThree = new THREE.WebGLRenderer();
         rendererThree.antialias = true;
-        rendererThree.setSize(window.innerWidth, window.innerHeight);
+        if (isCaptured) {
+            rendererThree.setSize(1920, 1080);
+        } else {
+            rendererThree.setSize(window.innerWidth, window.innerHeight);
+        }
         canvas = rendererThree.domElement;
         document.body.appendChild(canvas);
 
