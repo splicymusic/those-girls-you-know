@@ -155,7 +155,7 @@ class TunnelSection extends Actor {
 
 
         // inner cards
-        let effectIndex = this.clock.bar % 1;
+        let effectIndex = this.clock.whole % 1;
         this.innerCards.forEach(card => {
 
             if (effectIndex === 0) {

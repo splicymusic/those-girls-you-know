@@ -49,7 +49,7 @@ class Sky extends Actor {
             this.scene.background = this.skyBlue;
         }
 
-        if (cameraPosition >= Utils.locationInSong(0, 30, 0)) {
+        if (cameraPosition >= Utils.locationInSong(0, 30, 0) - 0.1) {
             this.scene.background = this.black;
             if (this.clock.isNewQuarter) {
                 this.scene.fog = this.fogs[Utils.randomInt(this.fogs.length)];

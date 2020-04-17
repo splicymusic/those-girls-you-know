@@ -12,12 +12,12 @@ class Burst extends Actor {
         let group = new THREE.Group();
         let stars = [];
         let amount = 50;
+        let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
         for(let i = 0; i < amount; i++) {
             let zPos = zPosSuggested + Math.random() * .3;
             let rotationAmount = 2 * Math.PI / amount * i;
-            let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
-            // let imagePath = "images/emoji/star.png";
-            let star = loader.getPlane(imagePath, 1);
+
+            let star = loader.getPlane(imagePath, 2);
 
             stars.push(star);
             let center = new THREE.Group();

@@ -4,14 +4,16 @@ class Clock {
     constructor(sections, bars, eighths) {
         // the length of time for one section (4 bars)
         this.sectionSeconds = 11.163;
-        this.barSeconds = this.sectionSeconds / 4;
-        this.quarterSeconds = this.barSeconds / 4;
-        this.eighthSeconds = this.barSeconds / 8;
+        this.wholeSeconds = this.sectionSeconds / 4;
+        this.quarterSeconds = this.wholeSeconds / 4;
+        this.eighthSeconds = this.wholeSeconds / 8;
         this.startSeconds = this.calculateTime(sections, bars, eighths);
         this.startMillis = Math.round(this.startSeconds * 1000);
         this.seconds = this.startSeconds;
         this.millis = this.startMillis;
         this.frame = 0;
+        this.whole = 0;
+        this.half = 0;
         this.quarter = 0;
         this.eigth = 0;
         this.isNewQuarter = false;
@@ -46,12 +48,13 @@ class Clock {
         } else {
             this.isNewEigth = false;
         }
-        this.bar = Math.floor(this.seconds / this.barSeconds);
+        this.whole = Math.floor(this.seconds / this.wholeSeconds);
+        this.half = Math.floor(this.quarter / 2);
         this.section = Math.floor(this.seconds / this.sectionSeconds);
     }
 
     calculateTime(sections, bars, eighths) {
-        return sections * this.sectionSeconds + bars * this.barSeconds + eighths * this.eighthSeconds;
+        return sections * this.sectionSeconds + bars * this.wholeSeconds + eighths * this.eighthSeconds;
     }
 }
 

@@ -12,27 +12,28 @@ class EmojiTunnel extends Actor {
         this.tunnelLength = tunnelLength;
 
         let emojiPaths = [];
-        for (let j = 1; j <= tunnelLength; j++) {
-            let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
+        for (let j = 0; j < tunnelLength; j++) {
+            //let imagePath = loader.happyEmoji[Utils.randomInt(loader.happyEmoji.length)];
+            let imagePath = loader.happyEmoji[j % loader.happyEmoji.length];
             emojiPaths.push(imagePath);
         }
         this.emojiPaths = emojiPaths;
-        this.innerCards = [];
-        this.innerSpine = this.createSpiral(this.innerCards, 5, 2);
+        this.cards = [];
+        this.radius = 5;
+        this.spine = this.createSpiral(this.cards, this.radius, 2);
+        this.haRotation = Math.PI;
     }
 
     createSpiral(cards, radius, scale) {
-
         let spine = new THREE.Group();
         for (let i = 0; i < this.tunnelLength; i++) {
 
-            let path = this.emojiPaths[Utils.randomInt(this.emojiPaths.length)];
+            let path = this.emojiPaths[i];
             for (let j = 0; j < 16; j++) {
                 let rotationAmount = 2 * Math.PI / 16 * j;
                 let center = new THREE.Group();
                 let end = new THREE.Group();
                 let picture;
-
 
                 picture = this.loader.getPlane(path, scale);
 
@@ -56,18 +57,70 @@ class EmojiTunnel extends Actor {
         let b = Utils.locationInSong(0, 36, 0) - 0.1;
         let c = Utils.locationInSong(0, 38, 0) - 0.1;
         if (cameraPosition >= a && cameraPosition < b) {
-            this.innerSpine.visible = true;
+            this.spine.visible = true;
         }
         if (cameraPosition >= b && cameraPosition < c) {
-            this.innerSpine.visible = false;
+            this.spine.visible = false;
         }
         if (cameraPosition >= c) {
-            this.innerSpine.visible = true;
+            this.spine.visible = true;
         }
 
-        // inner cards
-        let effectIndex = this.clock.bar % 1;
-        this.innerCards.forEach(card => {
+        // rotate on spine
+        // if (cameraPosition >= Utils.locationInSong(0, 12, 0) - 0.1) {
+        //         this.spine.rotation.x -= .002 * fpsAdjustment;
+        // }
+
+        // "ha" pulsations
+        if (
+            (cameraPosition >= Utils.locationInSong(0, 12, 2) && cameraPosition < Utils.locationInSong(0, 12, 6)) ||
+            (cameraPosition >= Utils.locationInSong(0, 13, 4) && cameraPosition < Utils.locationInSong(0, 13, 6))
+        ) {
+            this.cards.forEach(card => {
+                card.end.position.z = this.radius + Math.sin(cameraPosition * Math.PI) / 2;
+            });
+        }
+
+        // finale pulsate
+        // if (
+        //     cameraPosition >= Utils.locationInSong(0, 40, 0)
+        // ) {
+        //     this.cards.forEach(card => {
+        //         if (this.clock.half % 2 === 0) {
+        //             card.end.position.z = this.radius + Math.sin(cameraPosition * Math.PI) / 8;
+        //         }
+        //     });
+        // }
+        // final "ha"
+        if (
+            (cameraPosition >= Utils.locationInSong(0, 15, 2) && cameraPosition < Utils.locationInSong(0, 15, 7))
+        ) {
+            let rotationAmount = -1 * Math.PI / 90 * fpsAdjustment;
+            let vector = new THREE.Vector3(0, 0, 1);
+            this.cards.forEach(card => {
+                if (this.haRotation > 0) {
+                    card.end.rotateOnAxis(vector, rotationAmount);
+                } else {
+                    if (this.haRotation !== 0) {
+                        card.end.rotateOnAxis(vector, -1 * this.haRotation);
+                    }
+                }
+            });
+
+            if (this.haRotation > 0) {
+                this.haRotation += rotationAmount;
+            } else {
+                if (this.haRotation !== 0) {
+                    this.haRotation = 0;
+                }
+            }
+
+        }
+
+
+        // rotate individual emojis
+        let effectIndex = this.clock.whole % 1;
+        this.cards.forEach(card => {
 
             if (effectIndex === 0) {
                 card.picture.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180 * fpsAdjustment);

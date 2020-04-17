@@ -19,6 +19,7 @@ A "starry night" implementation:
 https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 
 ## Influences
+* Girls Season 1 soundtrack
 * MGMT - Time to Pretend
 * White Stripes - Seven Nation Army
 * Fazerdaze - Little Uneasy
@@ -29,13 +30,14 @@ https://medium.com/@kellylougheed/3d-starry-night-with-three-js-7f9191bbcb84
 ## description
 SPLICY - Those Girls You know [70s ICONS]
 
-A celebration of the iconic women of the 1970s. How many do you recognize?  Who's your favorite?  Did we miss anyone?
+A celebration of the iconic women of the 1970s. How many do you recognize?  Who's your favorite?  Did i miss anyone?
  
-itunes:
-amazon:
-spotif: 
+itunes: https://music.apple.com/us/album/those-girls-you-know-single/1505735361
+amazon: https://music.amazon.com/albums/B086L222Y8
+spotif: https://open.spotify.com/track/4U2KFqVcpDG2FpwbLaTZIR
+pandor: https://pandora.app.link/Lk88MVnqJ5
 
-I made this in about 3 weeks in JavaScript.  First music video ever made with JS?
+I made this in about 3 weeks in JavaScript.  First JS music video evah?
 interactive version: http://SPLICY.com
 
 source: 

@@ -25,7 +25,7 @@ class Swimmers extends Actor {
         let crowdDepth = Utils.locationInSong(2, 1, 0);
         let loc = Utils.locationInSong(0, 39, 0) - crowdDepth;
         let scale = 4;
-        for (let i = 0; i < 700; i++) {
+        for (let i = 0; i < 1000; i++) {
             let path = paths[i % paths.length];
             let cutout = loader.getPlane(path, scale);
             let xPos = loc +  Utils.randomInt(crowdDepth) + Math.random() * .2;

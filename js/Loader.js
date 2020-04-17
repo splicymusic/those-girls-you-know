@@ -30,9 +30,9 @@ class Loader {
 
 
         let names2 = [
+            "Lola Falana",
             "Victoria Principal",
             "Jacqueline Bisett",
-            "Lola Falana",
             "Jane Seymour",
             "Cybill Shepherd",
         ];
@@ -98,6 +98,7 @@ class Loader {
         ];
 
         imageList.push("images/rainbow.png");
+        imageList.push("images/sunrise.png");
         imageList.push("images/sunset.png");
         imageList.push("images/blank.png");
         imageList.push("images/mom/IMG_0066.JPG");
