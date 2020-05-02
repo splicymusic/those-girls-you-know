@@ -52,9 +52,6 @@ class Wave extends Actor {
                 building.position.x = xPos + Math.random() * 2;
                 building.position.y = yPos;
                 building.position.z = -2;
-                if (path.endsWith("Dey/1.jpg")) {
-                    console.log("dey: " + xPos + "," + yPos);
-                }
                 buildings.push(building);
                 group.add(building);
                 yPos += spacing;

@@ -2,8 +2,8 @@ import * as THREE from "../lib/three/build/three.module.js";
 
 class Loader {
 
-    constructor(callback) {
-        this.loader = new THREE.TextureLoader();
+    constructor(callback, loadingManager) {
+        this.loader = new THREE.TextureLoader(loadingManager);
         let imageList = [];
 
         let names = [
@@ -110,6 +110,10 @@ class Loader {
         this.loadImage(callback);
     }
 
+    getSize() {
+        return this.imageList.length;
+    }
+
     pushImages(imageList, path, names) {
         for (let i = 0; i < names.length; i++) {
             let girl = names[i];
@@ -156,7 +160,6 @@ class Loader {
             let self = this;
             this.loader.load(path, function(texture) {
                 texture.minFilter = THREE.LinearFilter;
-                console.log("loaded: " + path + " (" + texture.image.width + "x" + texture.image.height + ")");
                 self.images[path] = texture;
                 self.loadImage(callback);
             });
