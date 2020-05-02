@@ -8,16 +8,17 @@ class Fireworks extends Actor {
 
     constructor(scene, clock, loader) {
         super(scene, clock, loader);
+        // placing the bursts just behind the next girl
         this.burstsA = [];
-        this.burst(scene, clock, loader, this.burstsA, Utils.locationInSong(0, 42, 0), 8);
+        this.burst(scene, clock, loader, this.burstsA, Utils.locationInSong(0, 42, 1), 8);
         this.burstsB = [];
-        this.burst(scene, clock, loader, this.burstsB, Utils.locationInSong(0, 44, 0), 8);
+        this.burst(scene, clock, loader, this.burstsB, Utils.locationInSong(0, 44, 1), 8);
         this.burstsC = [];
-        this.burst(scene, clock, loader, this.burstsC, Utils.locationInSong(0, 46, 0), 10);
+        this.burst(scene, clock, loader, this.burstsC, Utils.locationInSong(0, 46, 1), 10);
         this.burstsD = [];
-        this.burst(scene, clock, loader, this.burstsD, Utils.locationInSong(0, 48, 0), 10);
+        this.burst(scene, clock, loader, this.burstsD, Utils.locationInSong(0, 48, 1), 10);
         this.burstsE = [];
-        this.burst(scene, clock, loader, this.burstsE, Utils.locationInSong(0, 50, 0), 25);
+        this.burst(scene, clock, loader, this.burstsE, Utils.locationInSong(0, 50, 1), 25);
     }
 
     burst(scene, clock, loader, group, xPos, amount) {

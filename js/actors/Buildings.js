@@ -70,7 +70,7 @@ class Buildings extends Actor {
             let height = Utils.randomInt(6) + 1;
             //let geometry = new THREE.BoxGeometry(1, 1, height);
             //let geometry = new THREE.OctahedronBufferGeometry(1,0);
-            let geometry = new THREE.SphereBufferGeometry(1, 32, 32);
+            let geometry = new THREE.SphereBufferGeometry(1, 100, 100);
             geometry.scale(1, 1, height);
             let building = new THREE.Mesh(geometry, shinyMaterial);
 

@@ -79,7 +79,8 @@ class Sky extends Actor {
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 41, 0)) {
-            this.scene.background = this.darks[sinIndex];
+            //this.scene.background = this.darks[sinIndex];
+            this.scene.background = this.black;
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 42, 0)) {
@@ -87,7 +88,8 @@ class Sky extends Actor {
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 43, 0)) {
-            this.scene.background = this.darks[sinIndex];
+            // this.scene.background = this.darks[sinIndex];
+            this.scene.background = this.black;
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 44, 0)) {
@@ -95,7 +97,8 @@ class Sky extends Actor {
         }
 
         if (cameraPosition >= Utils.locationInSong(0, 45, 0)) {
-            this.scene.background = this.darks[sinIndex];
+            // this.scene.background = this.darks[sinIndex];
+            this.scene.background = this.black;
         }
         if (cameraPosition >= Utils.locationInSong(0, 46, 0)) {
             this.scene.background = this.colors[sinIndex];

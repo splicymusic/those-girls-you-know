@@ -41,6 +41,7 @@ class Cutouts extends Actor {
                 yPos = -1.1;
             }
             plane.position.set(loc, yPos, zPos);
+            plane.material.fog = false;
             cutouts.push(plane);
             if (i > 0) plane.visible = false;
             group.add(plane);

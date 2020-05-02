@@ -55,7 +55,7 @@ class Clouds extends Actor {
 
             // fades to noting at center of screen so as to not visually interfere with the
             // foreground elements
-            if (cameraPosition > Utils.locationInSong(1, 0, 0)) {
+            if (cameraPosition > Utils.locationInSong(1, 0, 0) - 0.1) {
                 let fromCenter = Math.abs(object.cloud.position.y);
                 let radius = 60;
                 if (fromCenter < radius) {

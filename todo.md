@@ -34,12 +34,11 @@ How many of these fantastic ladies do you recognize?  Who's your favorite?  Did 
  
 itunes: https://music.apple.com/us/album/those-girls-you-know-single/1505735361
 amazon: https://music.amazon.com/albums/B086L222Y8
-spotif: https://open.spotify.com/track/4U2KFqVcpDG2FpwbLaTZIR
-pandor: https://pandora.app.link/Lk88MVnqJ5
+spotify: https://open.spotify.com/track/4U2KFqVcpDG2FpwbLaTZIR
+pandora: https://pandora.app.link/Lk88MVnqJ5
 
 I made this in about 3 weeks in JavaScript.  First JS music video evah?
 interactive version: http://SPLICY.com
 
-source: 
- THREE.js -- for the everything
- CCapture -- to export the video 
+The source code:
+https://github.com/splicymusic/those-girls-you-know

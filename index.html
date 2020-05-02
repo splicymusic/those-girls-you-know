@@ -40,13 +40,15 @@
     import FinalImage from "./js/actors/FinalImage.js";
     import Fireworks from "./js/actors/fireworks/Fireworks.js";
 
-    // Used for exporting animation.  Set isCaptured to true to export.
-    var capturer = new CCapture( { format: 'png' } );
-    let canvas;
+    // Exporting animation.  Set isCaptured to true to export.
     let isCaptured = false;
+    let captureWidth = 1920;
+    let captureHeight = 1080;
+    let capturer = new CCapture( { format: 'jpg' } );
+    let canvas;
 
     // tracking where we are in the song
-    let clock = new Clock(0, 0, 0);
+    let clock = new Clock(0, 38, 0);
 
     // stats to optimize performance
     let stats = new Stats();
@@ -86,7 +88,7 @@
         rendererThree = new THREE.WebGLRenderer();
         rendererThree.antialias = true;
         if (isCaptured) {
-            rendererThree.setSize(1920, 1080);
+            rendererThree.setSize(captureWidth, captureHeight);
         } else {
             rendererThree.setSize(window.innerWidth, window.innerHeight);
         }

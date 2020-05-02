@@ -8,7 +8,6 @@ class Burst extends Actor {
     constructor(scene, clock, loader, xPos, yPos, zPosSuggested) {
         super(scene, clock, loader);
         this.xPos = xPos;
-        this.xOffset = Utils.locationInSong(0, 2, 0);
         let group = new THREE.Group();
         let stars = [];
         let amount = 50;
@@ -47,7 +46,6 @@ class Burst extends Actor {
                 star.position.z += 0.5 * fpsAdjustment;
                 // star fade
                 if (star.material.opacity > 0.01) {
-                    //star.material.opacity *= 0.8 * fpsAdjustment;
                     let factor = (this.xPos - cameraPosition ) / 16;
                     star.material.opacity *= Math.max(factor, 0);
                 } else {
