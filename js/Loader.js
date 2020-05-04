@@ -103,11 +103,22 @@ class Loader {
         imageList.push("images/blank.png");
         imageList.push("images/mom/IMG_0066.JPG");
         this.imageList = imageList;
-
-
         this.images = {};
         this.index = 0;
-        this.loadImage(callback);
+
+        let self = this;
+        imageList.forEach(imagePath => {
+            this.loader.load(imagePath, function(texture) {
+                texture.minFilter = THREE.LinearFilter;
+                self.images[imagePath] = texture;
+                self.index += 1;
+                // console.log(imagePath);
+                if (self.index === self.imageList.length) {
+                    callback();
+                }
+            });
+        });
+
     }
 
     getSize() {
@@ -147,26 +158,6 @@ class Loader {
         mesh.receiveShadow = false;
         mesh.castShadow = false;
         return mesh;
-    }
-
-
-    // loads an image then calls itself.
-    // if no more images to load, callback is called.
-    // Probably a good async way to do this, but no time to learn that right now!
-    loadImage(callback) {
-
-        if (this.index < this.imageList.length) {
-            let path = this.imageList[this.index];
-            let self = this;
-            this.loader.load(path, function(texture) {
-                texture.minFilter = THREE.LinearFilter;
-                self.images[path] = texture;
-                self.loadImage(callback);
-            });
-            this.index++;
-        } else {
-            callback();
-        }
     }
 
 }
