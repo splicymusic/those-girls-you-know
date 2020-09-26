@@ -8,7 +8,7 @@
             margin: 0;
             background-color: black;
             color: white;
-            font-family: Helvetica, Arial,sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
         }
 
         canvas {
@@ -82,6 +82,21 @@
 
     // tracking where we are in the song
     let clock = new Clock(0, 0, 0);
+    let captureStopQuarter = 50 * 4;
+    let doesBounce = true;
+
+    // for saving to instagram
+    // let isCaptured = true;
+    // let captureWidth = 512;
+    // let captureHeight = 512;
+    // let capturer = new CCapture({
+    //     format: 'jpg',
+    //     framerate: 12
+    // });
+    // let canvas;
+    // let clock = new Clock(0, 104 / 4 , 0);
+    // let captureStopQuarter = 104 + 16;
+    // let doesBounce = false;
 
     // stats to optimize performance
     let stats = new Stats();
@@ -213,7 +228,7 @@
     function capture() {
         if (isCaptured) {
             capturer.capture(canvas);
-            if (clock.isNewQuarter && clock.quarter === 50 * 4) {
+            if (clock.isNewQuarter && clock.quarter === captureStopQuarter) {
                 capturer.save();
             }
         }
@@ -226,7 +241,7 @@
         // camera.position.x = clock.eighthsFraction * 4 + Math.cos(clock.eighthsFraction * Math.PI) * 0.25;
 
         // bounce
-        if (camera.position.x >= Utils.locationInSong(1, 0, 0) && camera.position.x < Utils.locationInSong(0, 48, 0)) {
+        if (doesBounce && camera.position.x >= Utils.locationInSong(1, 0, 0) && camera.position.x < Utils.locationInSong(0, 48, 0)) {
             camera.position.z = Math.cos(clock.eighthsFraction * Math.PI) * 0.04;
         }
 
@@ -250,6 +265,7 @@
     function play() {
         if (!isPlaying) {
             progressMessage.remove();
+            resize();
             if (!isCaptured) {
                 those_girls_you_know.currentTime = clock.seconds;
                 those_girls_you_know.play();
@@ -298,9 +314,15 @@
     }
 
     function resize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        rendererThree.setSize(window.innerWidth, window.innerHeight);
+        if (!isCaptured) {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            rendererThree.setSize(window.innerWidth, window.innerHeight);
+        } else {
+            camera.aspect = captureWidth / captureHeight;
+            camera.updateProjectionMatrix();
+            rendererThree.setSize(captureWidth, captureHeight);
+        }
     }
 
     function calculateFps() {

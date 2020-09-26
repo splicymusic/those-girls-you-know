@@ -42,21 +42,6 @@ class Loader {
 
         imageList.push("images/title card.png");
 
-        this.makeup = [
-            "images/makeup/ad1.jpg",
-            "images/makeup/ad2.jpg",
-            "images/makeup/ad3.jpg",
-            "images/makeup/ad4.jpg",
-            "images/makeup/brush.png",
-            "images/makeup/brush2.png",
-            "images/makeup/brush3.png",
-            "images/makeup/lipstic1.png",
-            "images/makeup/lipstic2.png",
-            "images/makeup/mascara1.png",
-            "images/makeup/mascara2.png"
-        ];
-        imageList = imageList.concat(this.makeup);
-
         this.emojis = [
             "images/emoji/beating-heart.png",
             "images/emoji/blue-heart.png",
